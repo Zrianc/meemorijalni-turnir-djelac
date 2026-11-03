@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aplikacija za organizatore – Memorijal „Đelac”</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0a2a66">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .adm-team{display:flex;flex-direction:column;gap:10px}
+  .adm-team .th{display:flex;gap:12px;align-items:center}
+  .adm-team .th h3{margin:0;font-size:1.25rem}
+  .adm-team .meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem;color:var(--muted)}
+  .adm-team .meta a{color:var(--navy);font-weight:600;text-decoration:none}
+  .adm-team .note{font-size:.88rem;background:var(--stone);border-radius:8px;padding:8px 10px}
+  .adm-match{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:10px 12px;border-left:4px solid transparent}
+  .adm-match.is-live{border-left-color:var(--live)}
+  .adm-match.is-done{border-left-color:var(--ok)}
+  .adm-match .top-line{display:flex;gap:8px;align-items:center;font-size:.8rem;color:var(--muted);margin-bottom:8px;flex-wrap:wrap}
+  .adm-match .top-line b{color:var(--navy);font-size:.92rem}
+  .score-line{display:grid;grid-template-columns:1fr 54px 14px 54px 1fr;gap:6px;align-items:center}
+  .score-line .m-team{font-size:.95rem}
+  .score-line input{text-align:center;font-family:var(--head);font-size:1.5rem;font-weight:800;padding:6px 2px}
+  .score-line .colon{text-align:center;font-weight:800;color:var(--muted)}
+  .adm-match .actions{display:flex;gap:6px;justify-content:flex-end;margin-top:9px;flex-wrap:wrap}
+  .reveal{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:10px}
+  .reveal .rg{background:var(--stone);border-radius:12px;padding:10px}
+  .reveal .rg h4{margin:0 0 8px;color:var(--navy)}
+  .reveal .ri{display:flex;gap:8px;align-items:center;background:#fff;border-radius:8px;padding:7px 9px;margin-bottom:6px;font-weight:600;animation:pop .35s ease}
+  @keyframes pop{from{transform:scale(.6);opacity:0}}
+  .sc-col{background:var(--stone);border-radius:12px;padding:10px}
+  .sc-col h4{margin:0 0 8px;color:var(--navy);display:flex;gap:8px;align-items:center}
+  .sc-row{display:grid;grid-template-columns:1fr 40px;gap:6px;margin-bottom:6px}
+  .sc-row .other{grid-column:1 / -1}
+  .login{max-width:420px;margin:30px auto}
+  .demo-tools{border:1.5px dashed #f0cf7a;background:#fffaf0}
+  .settings h3{margin-top:8px;padding-top:14px;border-top:1px solid var(--line)}
+  .settings h3:first-child{border-top:0;padding-top:0}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#ekipe">
+      <svg viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 37 8v16c0 11-8 18-17 22C11 42 3 35 3 24V8z" fill="#0d3480" stroke="#fff" stroke-width="2.2"/><path d="m10 31 5-7 7 1.5 6 7.5-4 5.5H14z" fill="#fff"/><path d="m14 18 4.5-4.5 6 .8 2.2 5.2-4.5 3.6-6.6-.8z" fill="#cfdcf3"/><path d="m27 24 3.5-2 3.5 3-.8 4.2-4.2.6z" fill="#cfdcf3"/></svg>
+      <span><b>Organizator</b><small id="brand-sub">Memorijal „Đelac”</small></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="mode-pill" id="mode-pill" hidden>Demo</span>
+    <a class="btn outline sm" href="index.html" target="_blank" rel="noopener" style="white-space:nowrap">Stranica ↗</a>
+  </div>
+</header>
+<nav class="tabs" aria-label="Izbornik aplikacije"><div class="wrap" id="nav"></div></nav>
+<main><div class="wrap" id="app"><div class="loading"><div class="spinner"></div>Učitavam…</div></div></main>
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script src="core.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, S, API, isNum, toast, openModal, closeModal, confirmBox, saveT } = T;
+
+  const TABS = [['ekipe', 'Ekipe i igrači'], ['zdrijeb', 'Ždrijeb'], ['utakmice', 'Utakmice'], ['postavke', 'Postavke']];
+  const UI = { teamFilter: 'all', matchFilter: 'open' };
+  const current = () => { const h = location.hash.slice(1); return TABS.some(t => t[0] === h) ? h : 'ekipe'; };
+
+  function renderNav() {
+    const cur = current();
+    $('#nav').innerHTML = S.isAdmin ? TABS.map(([k, l]) => {
+      let c = '';
+      if (k === 'ekipe') { const p = S.teams.filter(x => x.status === 'pending').length; if (p) c = ` <span class="badge pending">${p}</span>`; }
+      if (k === 'utakmice') { const l2 = S.t.matches.filter(m => m.status === 'live').length; if (l2) c = ` <span class="badge live">${l2}</span>`; }
+      return `<a href="#${k}" class="${k === cur ? 'on' : ''}">${l}${c}</a>`;
+    }).join('') + '<button data-action="logout">Odjava</button>' : '';
+    $('#mode-pill').hidden = T.LIVE;
+    $('#brand-sub').textContent = S.t.settings.name;
+  }
+
+  function render() {
+    renderNav();
+    const app = $('#app');
+    if (S.error && !S.loaded) { app.innerHTML = `<div class="notice err">${esc(S.error)}</div>`; return; }
+    if (!S.isAdmin) { app.innerHTML = vLogin(); return; }
+    const v = { ekipe: vTeams, zdrijeb: vDraw, utakmice: vMatches, postavke: vSettings }[current()];
+    app.innerHTML = v();
+  }
+
+  /* ================= PRIJAVA U APLIKACIJU ================= */
+  function vLogin() {
+    if (!T.LIVE) return `<div class="card login"><h2>Demo način</h2>
+      <p>Baza još nije povezana, pa se podaci spremaju samo u ovom pregledniku. Ovdje možeš isprobati cijeli tijek: dodati ekipe, napraviti ždrijeb i upisivati rezultate.</p>
+      <button class="btn primary lg" data-action="demo-login" style="width:100%">Uđi kao organizator</button></div>`;
+    return `<form class="card login" id="login-form"><h2>Prijava organizatora</h2>
+      <div class="field"><label for="l-mail">E-mail</label><input id="l-mail" name="email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="l-pw">Lozinka</label><input id="l-pw" name="password" type="password" autocomplete="current-password" required></div>
+      <div id="login-err"></div>
+      <button class="btn primary lg" style="width:100%">Prijavi se</button></form>`;
+  }
+
+  /* ================= EKIPE ================= */
+  function vTeams() {
+    const st = S.t.settings;
+    const counts = { all: S.teams.length, pending: 0, approved: 0, rejected: 0 };
+    S.teams.forEach(t => counts[t.status] = (counts[t.status] || 0) + 1);
+    const list = S.teams.filter(t => UI.teamFilter === 'all' || t.status === UI.teamFilter)
+      .sort((a, b) => (a.status === 'pending' ? -1 : 0) - (b.status === 'pending' ? -1 : 0) || a.name.localeCompare(b.name, 'hr'));
+    const drawn = !!S.t.drawnAt;
+    const SL = { pending: 'na čekanju', approved: 'potvrđena', rejected: 'odbijena' };
+    return `
+      <div class="sec-head"><div><h2>Ekipe i igrači</h2><p class="lead">${counts.approved} potvrđenih od najviše ${st.maxTeams} · prijave su ${st.registrationOpen && !drawn ? '<b style="color:var(--ok)">otvorene</b>' : '<b>zatvorene</b>'}</p></div>
+        <div class="btn-row"><button class="btn ghost" data-action="toggle-reg" ${drawn ? 'disabled' : ''}>${st.registrationOpen ? 'Zatvori prijave' : 'Otvori prijave'}</button><button class="btn primary" data-action="team-add">+ Dodaj ekipu</button></div></div>
+      ${drawn ? '<div class="notice warn">Ždrijeb je obavljen. Promjene imena i igrača odmah se vide na stranici; nova ili odbijena ekipa ne mijenja ždrijeb dok ga ne ponoviš.</div>' : ''}
+      ${!T.LIVE ? demoTools() : ''}
+      <div class="filters"><div class="seg">${[['all', 'Sve'], ['pending', 'Na čekanju'], ['approved', 'Potvrđene'], ['rejected', 'Odbijene']].map(([k, l]) => `<button data-tf="${k}" class="${UI.teamFilter === k ? 'on' : ''}">${l} (${counts[k] || 0})</button>`).join('')}</div></div>
+      ${list.length ? `<div class="grid g2">${list.map(t => `
+        <div class="card adm-team">
+          <div class="th">${T.crest(t.id, 'lg')}<div style="min-width:0"><h3>${esc(t.name)}</h3>
+            <span class="badge ${t.status}">${SL[t.status] || t.status}</span> ${t.seeded ? '<span class="badge seed">nositelj</span>' : ''}</div></div>
+          <div class="meta">
+            ${t.captain ? `<span>👤 ${esc(t.captain)}</span>` : ''}
+            ${t.phone ? `<span>📞 <a href="tel:${esc(String(t.phone).replace(/[^\d+]/g, ''))}">${esc(t.phone)}</a></span>` : ''}
+            ${t.email ? `<span>✉️ ${esc(t.email)}</span>` : ''}
+            <span>👕 ${(t.players || []).length} igrača${t.color ? ' · ' + esc(t.color) : ''}</span>
+          </div>
+          ${t.note ? `<div class="note">💬 ${esc(t.note)}</div>` : ''}
+          <div class="btn-row">
+            ${t.status !== 'approved' ? `<button class="btn ok sm" data-action="team-status" data-id="${t.id}" data-s="approved">✓ Potvrdi</button>` : ''}
+            ${t.status !== 'rejected' ? `<button class="btn danger sm" data-action="team-status" data-id="${t.id}" data-s="rejected">Odbij</button>` : ''}
+            ${t.status === 'rejected' ? `<button class="btn ghost sm" data-action="team-status" data-id="${t.id}" data-s="pending">Vrati na čekanje</button>` : ''}
+            <button class="btn ghost sm" data-action="team-edit" data-id="${t.id}">Uredi / igrači</button>
+            <label class="check" style="font-size:.88rem;margin-left:auto"><input type="checkbox" data-action="team-seed" data-id="${t.id}" ${t.seeded ? 'checked' : ''} ${drawn ? 'disabled' : ''}> nositelj</label>
+          </div>
+        </div>`).join('')}</div>` : '<div class="empty"><b>Nema ekipa</b>Ekipe se prijavljuju preko web stranice, a možeš ih dodati i sam gumbom „Dodaj ekipu”.</div>'}`;
+  }
+  function demoTools() {
+    return `<div class="card demo-tools" style="margin-bottom:16px"><b>Demo alati</b> <span style="color:var(--muted);font-size:.9rem">(samo za isprobavanje – nestaju kad se poveže baza)</span>
+      <div class="btn-row" style="margin-top:8px"><button class="btn ghost sm" data-action="demo-seed">Dodaj 12 primjer ekipa</button>
+      <button class="btn ghost sm" data-action="demo-sim">Simuliraj rezultate</button>
+      <button class="btn danger sm" data-action="demo-reset">Obriši sve demo podatke</button></div></div>`;
+  }
+
+  function playerRow(p, i) {
+    return `<div class="prow"><input class="num" type="text" inputmode="numeric" maxlength="3" placeholder="br." value="${esc(p.number || '')}" aria-label="Broj dresa"><input type="text" maxlength="60" placeholder="Ime i prezime ${i + 1}. igrača" value="${esc(p.name || '')}" aria-label="Ime igrača"><button type="button" class="icon-btn" data-rm title="Ukloni">✕</button></div>`;
+  }
+  function teamModal(id) {
+    const t = id ? T.teamById(id) : { name: '', captain: '', phone: '', email: '', color: '', note: '', players: [], status: 'approved' };
+    const st = S.t.settings;
+    const pl = (t.players || []).length ? t.players : Array.from({ length: st.minPlayers }, () => ({}));
+    openModal(`<h3>${id ? 'Uredi ekipu' : 'Nova ekipa'}</h3>
+      <form id="team-form" novalidate>
+        <div class="field"><label>Ime ekipe *</label><input name="name" type="text" maxlength="60" value="${esc(t.name)}" required></div>
+        <div class="row2"><div class="field"><label>Kapetan</label><input name="captain" type="text" maxlength="80" value="${esc(t.captain || '')}"></div>
+          <div class="field"><label>Mobitel</label><input name="phone" type="tel" maxlength="30" value="${esc(t.phone || '')}"></div></div>
+        <div class="row2"><div class="field"><label>E-mail</label><input name="email" type="email" maxlength="120" value="${esc(t.email || '')}"></div>
+          <div class="field"><label>Boja dresova</label><input name="color" type="text" maxlength="40" value="${esc(t.color || '')}"></div></div>
+        <div class="field"><label>Status</label><select name="status">${[['approved', 'Potvrđena'], ['pending', 'Na čekanju'], ['rejected', 'Odbijena']].map(([k, l]) => `<option value="${k}" ${t.status === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+        <div class="lbl" style="margin-bottom:8px">Igrači</div>
+        <div class="players" id="m-players">${pl.map(playerRow).join('')}</div>
+        <button type="button" class="btn ghost sm" id="m-add">+ Dodaj igrača</button>
+        <div class="field" style="margin-top:14px"><label>Napomena</label><textarea name="note" maxlength="500">${esc(t.note || '')}</textarea></div>
+        <div id="team-err"></div>
+        <div class="modal-actions">${id ? '<button type="button" class="btn danger" id="m-del" style="margin-right:auto">Obriši ekipu</button>' : ''}
+          <button type="button" class="btn ghost" id="m-cancel">Odustani</button><button class="btn primary">Spremi</button></div>
+      </form>`);
+    const box = $('#m-players');
+    $('#m-add').onclick = () => { if (box.children.length >= 25) return; box.insertAdjacentHTML('beforeend', playerRow({}, box.children.length)); box.lastElementChild.querySelector('input:not(.num)').focus(); };
+    box.addEventListener('click', e => { if (e.target.closest('[data-rm]')) e.target.closest('.prow').remove(); });
+    $('#m-cancel').onclick = closeModal;
+    if (id) $('#m-del').onclick = async () => {
+      const inDraw = S.t.groups.some(g => g.teamIds.includes(id)) || S.t.matches.some(m => (m.home.id === id || m.away.id === id));
+      if (!(await confirmBox('Obrisati ekipu?', inDraw ? 'Ekipa je već u ždrijebu – njene utakmice ostat će bez imena dok ne ponoviš ždrijeb.' : 'Ova radnja se ne može poništiti.', 'Obriši', true))) return;
+      try { await API.deleteTeam(id); await T.refresh(); render(); toast('Ekipa obrisana', 'ok'); } catch (e) { toast(T.errText(e), 'err'); }
+    };
+    $('#team-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target), v = k => String(fd.get(k) || '').trim();
+      if (v('name').length < 2) { $('#team-err').innerHTML = '<div class="notice err">Upiši ime ekipe.</div>'; return; }
+      const players = $$('.prow', box).map(r => { const [n, nm] = $$('input', r); return { number: n.value.trim(), name: nm.value.trim() }; }).filter(p => p.name);
+      const data = { name: v('name'), captain: v('captain'), phone: v('phone'), email: v('email') || null, color: v('color') || null, note: v('note') || null, players, status: v('status') };
+      try {
+        if (id) await API.updateTeam(id, data); else await API.addTeam(data);
+        closeModal(); await T.refresh(); render(); toast('Ekipa spremljena', 'ok');
+      } catch (ex) { $('#team-err').innerHTML = `<div class="notice err">${esc(T.errText(ex))}</div>`; }
+    });
+  }
+
+  /* ================= ŽDRIJEB ================= */
+  function vDraw() {
+    const st = S.t.settings, n = T.approvedTeams().length, err = T.validateDraw();
+    const seeds = T.approvedTeams().filter(t => t.seeded).length;
+    if (!S.t.drawnAt) return `<div class="sec-head"><div><h2>Ždrijeb</h2><p class="lead">Ždrijeb automatski raspoređuje ekipe i slaže cijeli raspored utakmica.</p></div></div>
+      <div class="grid g2">
+        <div class="card"><h3>Što će se dogoditi</h3>
+          <ul class="rules">
+            <li>Sudjeluje <b>${n}</b> potvrđenih ekipa${seeds ? ` (${seeds} nositelja – raspoređuju se u različite skupine)` : ''}.</li>
+            <li>Format: <b>${esc(T.formatText())}</b>.</li>
+            <li>Prva utakmica u <b>${esc(st.startTime)}</b>, ${st.matchMinutes} min + ${st.breakMinutes} min pauze, ${st.fields} ${+st.fields === 1 ? 'teren' : 'terena'}.</li>
+            <li>Prijave se zatvaraju nakon ždrijeba.</li>
+          </ul>
+          <p class="lead" style="margin-top:10px">Format i satnicu mijenjaš u <a href="#postavke">Postavkama</a>.</p></div>
+        <div class="card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px">
+          <div style="font-size:3rem">🎲</div>
+          ${err ? `<div class="notice warn" style="margin:0">${esc(err)}</div>` : '<p style="margin:0">Sve je spremno.</p>'}
+          <button class="btn primary lg" data-action="draw" ${err ? 'disabled' : ''}>Izvrši ždrijeb</button>
+        </div>
+      </div>`;
+    const when = new Date(S.t.drawnAt).toLocaleString('hr-HR');
+    return `<div class="sec-head"><div><h2>Ždrijeb</h2><p class="lead">Obavljen ${esc(when)} · ${S.t.matches.length} utakmica</p></div>
+      <div class="btn-row"><button class="btn ghost" data-action="show-reveal">Prikaži ždrijeb</button><button class="btn ghost" data-action="reschedule">Ponovno složi satnicu</button>
+      <button class="btn danger" data-action="redraw">Ponovi ždrijeb</button><button class="btn danger" data-action="undraw">Poništi</button></div></div>
+      <div class="notice">„Ponovno složi satnicu” zadržava parove i rezultate, a samo iznova računa vremena i terene prema postavkama (korisno ako promijeniš početak ili trajanje).</div>
+      ${S.t.groups.length ? `<div class="grid g2">${S.t.groups.map(g => `<div class="card"><h3>${esc(g.name)}</h3>${T.standingsTable(g.key)}</div>`).join('')}</div>` : ''}
+      ${S.t.matches.some(m => m.stage === 'ko') ? `<h3 style="margin-top:24px">Eliminacije</h3>${T.bracketHTML({ clickable: true })}` : ''}`;
+  }
+  function showReveal(animate) {
+    const seq = S.t.drawSeq || [], groups = S.t.groups;
+    if (!groups.length) {
+      const first = S.t.matches.filter(m => m.stage === 'ko' && m.roundIndex === 0);
+      openModal(`<h3>Ždrijeb – parovi</h3><div class="matches">${first.map(m => T.matchCard(m)).join('')}</div><div class="modal-actions"><button class="btn primary" id="rv-close">Zatvori</button></div>`, 'wide');
+      $('#rv-close').onclick = closeModal; return;
+    }
+    openModal(`<h3>Ždrijeb</h3><div class="reveal">${groups.map(g => `<div class="rg"><h4>${esc(g.name)}</h4><div data-g="${g.key}"></div></div>`).join('')}</div>
+      <div class="modal-actions"><button class="btn ghost" id="rv-skip">Prikaži sve</button><button class="btn primary" id="rv-close">Zatvori</button></div>`, 'wide');
+    let i = 0, timer = null;
+    const put = s => { const box = $(`[data-g="${s.group}"]`); if (box) box.insertAdjacentHTML('beforeend', `<div class="ri">${T.crest(s.id, 'sm')}${esc(T.teamName(s.id))}</div>`); };
+    const all = () => { clearInterval(timer); while (i < seq.length) put(seq[i++]); };
+    if (animate) timer = setInterval(() => { if (i >= seq.length || !$('.reveal')) return clearInterval(timer); put(seq[i++]); }, 650);
+    else all();
+    $('#rv-skip').onclick = all; $('#rv-close').onclick = () => { clearInterval(timer); closeModal(); };
+  }
+
+  /* ================= UTAKMICE ================= */
+  const byTime = (a, b) => (a.time || '').localeCompare(b.time || '') || (a.field - b.field) || (a.seq - b.seq);
+  function vMatches() {
+    if (!S.t.drawnAt) return `<div class="sec-head"><h2>Utakmice</h2></div><div class="empty"><b>Još nema utakmica</b>Utakmice nastaju nakon <a href="#zdrijeb">ždrijeba</a>.</div>`;
+    let ms = S.t.matches.slice().sort(byTime);
+    const c = { open: ms.filter(m => m.status !== 'done').length, live: ms.filter(m => m.status === 'live').length, done: ms.filter(m => m.status === 'done').length, all: ms.length };
+    if (UI.matchFilter === 'open') ms = ms.filter(m => m.status !== 'done');
+    if (UI.matchFilter === 'live') ms = ms.filter(m => m.status === 'live');
+    if (UI.matchFilter === 'done') ms = ms.filter(m => m.status === 'done');
+    return `<div class="sec-head"><div><h2>Utakmice</h2><p class="lead">Upiši rezultat i pritisni ✓. „Detalji” služe za strijelce, kaznene udarce, vrijeme i teren.</p></div>
+      <button class="btn ghost" data-action="copy-schedule">Kopiraj raspored</button></div>
+      <div class="filters"><div class="seg">${[['open', 'Za odigrati'], ['live', 'Uživo'], ['done', 'Odigrane'], ['all', 'Sve']].map(([k, l]) => `<button data-mf="${k}" class="${UI.matchFilter === k ? 'on' : ''}">${l} (${c[k]})</button>`).join('')}</div></div>
+      ${ms.length ? `<div class="matches">${ms.map(admMatch).join('')}</div>` : '<div class="empty">Nema utakmica u ovom prikazu.</div>'}`;
+  }
+  function admMatch(m) {
+    const h = T.resolve(m.home), a = T.resolve(m.away), ready = !!(h && a);
+    const st = m.status, multi = (+S.t.settings.fields || 1) > 1;
+    return `<div class="adm-match ${st === 'live' ? 'is-live' : ''} ${st === 'done' ? 'is-done' : ''}" data-mid="${m.id}">
+      <div class="top-line"><b>${esc(m.time || '--:--')}</b>${multi ? `<span class="m-field">Teren ${esc(m.field)}</span>` : ''}<span style="flex:1">${esc(T.stageLabel(m))}</span>
+        ${st === 'live' ? '<span class="badge live">Uživo</span>' : st === 'done' ? '<span class="badge approved">Završeno</span>' : ''}
+        ${isNum(m.ph) ? `<span class="badge">${m.ph}:${m.pa} pen.</span>` : ''}</div>
+      <div class="score-line">
+        <div class="m-team home">${T.sideHTML(m.home, h)}</div>
+        <input type="number" inputmode="numeric" min="0" max="99" name="hg" value="${isNum(m.hg) ? m.hg : ''}" ${ready ? '' : 'disabled'} aria-label="Golovi domaćin">
+        <span class="colon">:</span>
+        <input type="number" inputmode="numeric" min="0" max="99" name="ag" value="${isNum(m.ag) ? m.ag : ''}" ${ready ? '' : 'disabled'} aria-label="Golovi gost">
+        <div class="m-team away">${T.sideHTML(m.away, a)}</div>
+      </div>
+      ${(m.scorers || []).length ? `<div class="m-scorers">${T.scorersLine(m)}</div>` : ''}
+      <div class="actions">
+        ${ready ? `${st !== 'live' && st !== 'done' ? `<button class="btn live sm" data-action="m-live" data-id="${m.id}">▶ Počni</button>` : ''}
+          <button class="btn ghost sm" data-action="edit-match" data-id="${m.id}">Detalji</button>
+          <button class="btn ${st === 'live' ? 'ghost' : 'ghost'} sm" data-action="m-save" data-id="${m.id}" data-keep="1" title="Spremi bez završavanja">Spremi</button>
+          <button class="btn ok sm" data-action="m-save" data-id="${m.id}">✓ Završi</button>`
+          : `<span style="color:var(--muted);font-size:.85rem">Čeka rezultate prethodnih utakmica</span><button class="btn ghost sm" data-action="edit-match" data-id="${m.id}">Termin</button>`}
+      </div></div>`;
+  }
+
+  let MS = null;
+  function matchModal(id, preset) {
+    const m = T.findMatch(id); if (!m) return;
+    const h = T.resolve(m.home), a = T.resolve(m.away), ready = !!(h && a);
+    MS = { id, scorers: T.clone(m.scorers || []) };
+    const v = Object.assign({ hg: m.hg, ag: m.ag, ph: m.ph, pa: m.pa, status: m.status }, preset || {});
+    openModal(`<h3>${esc(T.stageLabel(m))}</h3>
+      <form id="match-form" novalidate>
+        <div class="score-line" style="margin:6px 0 16px">
+          <div class="m-team home">${T.sideHTML(m.home, h)}</div>
+          <input type="number" inputmode="numeric" min="0" max="99" name="hg" value="${isNum(v.hg) ? v.hg : ''}" ${ready ? '' : 'disabled'}>
+          <span class="colon">:</span>
+          <input type="number" inputmode="numeric" min="0" max="99" name="ag" value="${isNum(v.ag) ? v.ag : ''}" ${ready ? '' : 'disabled'}>
+          <div class="m-team away">${T.sideHTML(m.away, a)}</div>
+        </div>
+        ${m.stage === 'ko' && ready ? `<div class="field"><label>Kazneni udarci (samo kod neriješenog)</label>
+          <div class="score-line"><span></span><input type="number" min="0" max="99" name="ph" value="${isNum(v.ph) ? v.ph : ''}"><span class="colon">:</span><input type="number" min="0" max="99" name="pa" value="${isNum(v.pa) ? v.pa : ''}"><span></span></div></div>` : ''}
+        <div class="row2">
+          <div class="field"><label>Status</label><select name="status" ${ready ? '' : 'disabled'}>${[['scheduled', 'Zakazano'], ['live', 'Uživo'], ['done', 'Završeno']].map(([k, l]) => `<option value="${k}" ${v.status === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+          <div class="field"><label>Vrijeme</label><input name="time" type="time" value="${esc(m.time || '')}"></div>
+          <div class="field"><label>Teren</label><input name="field" type="number" min="1" max="20" value="${esc(m.field || 1)}"></div>
+        </div>
+        ${ready ? `<div class="lbl" style="margin-bottom:8px">Strijelci</div><div class="grid g2" id="sc-box"></div>` : ''}
+        <div id="match-err"></div>
+        <div class="modal-actions">${ready ? '<button type="button" class="btn danger" id="mm-clear" style="margin-right:auto">Obriši rezultat</button>' : ''}
+          <button type="button" class="btn ghost" id="mm-cancel">Odustani</button><button class="btn primary">Spremi</button></div>
+      </form>`, 'wide');
+    if (ready) renderScorers(m, h, a);
+    $('#mm-cancel').onclick = closeModal;
+    const clr = $('#mm-clear'); if (clr) clr.onclick = async () => {
+      Object.assign(m, { hg: null, ag: null, ph: null, pa: null, status: 'scheduled', scorers: [] });
+      closeModal(); await saveT('Rezultat obrisan'); render();
+    };
+    $('#match-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const num = k => { const x = String(fd.get(k) ?? '').trim(); return x === '' ? null : Math.max(0, Math.min(99, parseInt(x, 10))); };
+      const time = String(fd.get('time') || '').trim(), field = Math.max(1, parseInt(fd.get('field'), 10) || 1);
+      if (!ready) { m.time = time; m.field = field; closeModal(); await saveT('Termin spremljen'); render(); return; }
+      let hg = num('hg'), ag = num('ag'), ph = num('ph'), pa = num('pa'), status = fd.get('status');
+      if (status !== 'scheduled' && (hg == null || ag == null)) { if (status === 'live') { hg = hg ?? 0; ag = ag ?? 0; } else { $('#match-err').innerHTML = '<div class="notice err">Upiši rezultat.</div>'; return; } }
+      if (m.stage === 'ko' && status === 'done' && hg === ag && (ph == null || pa == null || ph === pa)) { $('#match-err').innerHTML = '<div class="notice err">Eliminacijska utakmica mora imati pobjednika – upiši kaznene udarce.</div>'; return; }
+      if (!(m.stage === 'ko' && hg === ag)) { ph = null; pa = null; }
+      const sc = collectScorers();
+      Object.assign(m, { hg, ag, ph, pa, status, time, field, scorers: sc });
+      closeModal(); await saveT(status === 'done' ? 'Rezultat spremljen' : 'Spremljeno'); render();
+    });
+  }
+  function renderScorers(m, h, a) {
+    const col = (side, tid) => {
+      const team = T.teamById(tid) || {}, players = (team.players || []).map(p => p.name).filter(Boolean);
+      const rows = MS.scorers.map((s, i) => ({ s, i })).filter(x => x.s.side === side);
+      return `<div class="sc-col"><h4>${T.crest(tid, 'sm')}${esc(T.teamName(tid))}</h4>
+        ${rows.map(({ s, i }) => { const known = players.includes(s.name), val = s.og ? '__og' : (s._other ? '__other' : (known ? s.name : (s.name ? '__other' : '')));
+          return `<div class="sc-row"><select data-sci="${i}"><option value="">– odaberi igrača –</option>${players.map(p => `<option ${val === p ? 'selected' : ''}>${esc(p)}</option>`).join('')}
+            <option value="__other" ${val === '__other' ? 'selected' : ''}>Drugi igrač…</option><option value="__og" ${val === '__og' ? 'selected' : ''}>Autogol protivnika</option></select>
+            <button type="button" class="icon-btn" data-scrm="${i}" title="Ukloni">✕</button>
+            ${val === '__other' ? `<input class="other" type="text" data-sco="${i}" maxlength="60" placeholder="Ime i prezime" value="${esc(s.name)}">` : ''}</div>`; }).join('')}
+        <button type="button" class="btn ghost sm" data-scadd="${side}">+ Gol</button></div>`;
+    };
+    $('#sc-box').innerHTML = col('home', h) + col('away', a);
+    const box = $('#sc-box');
+    box.onclick = e => {
+      const add = e.target.closest('[data-scadd]'), rm = e.target.closest('[data-scrm]');
+      if (add) { syncScorers(); MS.scorers.push({ side: add.dataset.scadd, name: '' }); renderScorers(m, h, a); }
+      if (rm) { syncScorers(); MS.scorers.splice(+rm.dataset.scrm, 1); renderScorers(m, h, a); }
+    };
+    box.onchange = e => { if (e.target.matches('select[data-sci]')) { syncScorers(); renderScorers(m, h, a); const o = $(`[data-sco="${e.target.dataset.sci}"]`); if (o) o.focus(); } };
+  }
+  function syncScorers() {
+    $$('select[data-sci]').forEach(sel => {
+      const i = +sel.dataset.sci, s = MS.scorers[i]; if (!s) return;
+      if (sel.value === '__og') { s.og = true; s.name = 'Autogol'; }
+      else if (sel.value === '__other') { const o = $(`[data-sco="${i}"]`); s.name = o ? o.value.trim() : ''; s.og = false; s._other = true; }
+      else { s.og = false; s._other = false; s.name = sel.value; }
+    });
+  }
+  function collectScorers() {
+    if (!$('#sc-box')) return MS ? MS.scorers : [];
+    syncScorers();
+    return MS.scorers.filter(s => s.name && s.name.trim()).map(s => ({ side: s.side, name: s.name.trim(), ...(s.og ? { og: true } : {}) }));
+  }
+
+  /* ================= POSTAVKE ================= */
+  function vSettings() {
+    const s = S.t.settings, drawn = !!S.t.drawnAt;
+    const txt = (k, l, ph, type) => `<div class="field"><label for="s-${k}">${l}</label><input id="s-${k}" name="${k}" type="${type || 'text'}" value="${esc(s[k])}" placeholder="${esc(ph || '')}"></div>`;
+    const num = (k, l, min, max, hint) => `<div class="field"><label for="s-${k}">${l}</label><input id="s-${k}" name="${k}" type="number" min="${min}" max="${max}" value="${esc(s[k])}">${hint ? `<span class="hint">${hint}</span>` : ''}</div>`;
+    const area = (k, l, hint, rows) => `<div class="field"><label for="s-${k}">${l}</label><textarea id="s-${k}" name="${k}" rows="${rows || 4}">${esc(s[k])}</textarea>${hint ? `<span class="hint">${hint}</span>` : ''}</div>`;
+    const chk = (k, l) => `<label class="check" style="margin-bottom:12px"><input type="checkbox" name="${k}" ${s[k] ? 'checked' : ''}> <span>${l}</span></label>`;
+    return `<form class="card settings" id="settings-form" style="max-width:820px">
+      <div class="sec-head"><h2>Postavke</h2><button class="btn primary">Spremi postavke</button></div>
+      <h3>Opće informacije (prikazuju se na web stranici)</h3>
+      ${txt('name', 'Naziv turnira')}${txt('subtitle', 'Podnaslov')}
+      <div class="row2">${txt('date', 'Datum', '', 'date')}${txt('organizer', 'Organizator')}</div>
+      <div class="row2">${txt('location', 'Mjesto', 'npr. Varaždin')}${txt('venue', 'Igralište / dvorana', 'npr. Sportska dvorana …')}</div>
+      <div class="row2">${txt('fee', 'Kotizacija', 'npr. 50 € po ekipi')}${txt('contact', 'Kontakt', 'npr. Ivan, 091 234 5678')}</div>
+      ${area('prizes', 'Nagrade', '', 2)}
+      ${area('news', 'Obavijest na vrhu stranice', 'Npr. „Kasnimo 15 minuta” – ostavi prazno da se ne prikazuje.', 2)}
+      ${area('about', 'O memorijalu', '', 5)}
+      ${area('rules', 'Pravila', 'Svako pravilo u svom retku.', 7)}
+
+      <h3>Format natjecanja</h3>
+      ${drawn ? '<div class="notice warn">Ždrijeb je već obavljen – promjena formata vrijedi tek kad ponoviš ždrijeb.</div>' : ''}
+      <div class="field"><label for="s-format">Format</label><select id="s-format" name="format">
+        ${[['groups_ko', 'Skupine + eliminacije'], ['ko', 'Kup sustav (samo eliminacije)'], ['league', 'Liga – svatko sa svakim']].map(([k, l]) => `<option value="${k}" ${s.format === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div class="row2">${num('groupsCount', 'Broj skupina', 1, 16)}${num('advance', 'Iz svake skupine prolazi', 1, 8)}</div>
+      ${chk('doubleRound', 'Dvokružno (svaki par igra dvaput) – skupine i liga')}
+      ${chk('thirdPlace', 'Igra se utakmica za 3. mjesto')}
+
+      <h3>Satnica</h3>
+      <div class="row2">${txt('startTime', 'Početak prve utakmice', '', 'time')}${num('fields', 'Broj terena', 1, 8, 'Utakmice se igraju istodobno na svim terenima.')}</div>
+      <div class="row2">${num('matchMinutes', 'Trajanje utakmice (min)', 4, 120)}${num('breakMinutes', 'Pauza između utakmica (min)', 0, 60)}</div>
+      ${num('koBreak', 'Dodatna pauza prije eliminacija (min)', 0, 180)}
+
+      <h3>Prijave</h3>
+      ${chk('registrationOpen', 'Prijave su otvorene')}
+      <div class="row2">${num('maxTeams', 'Najviše ekipa', 2, 64)}${num('minPlayers', 'Najmanje igrača', 1, 25)}</div>
+      ${num('maxPlayers', 'Najviše igrača u prijavi', 1, 25)}
+      <button class="btn primary lg" style="width:100%;margin-top:6px">Spremi postavke</button>
+    </form>`;
+  }
+
+  /* ================= DEMO ================= */
+  const DEMO_TEAMS = ['Stari Varteks', 'Plavi kamen', 'Drava Boys', 'Banfica', 'Biškupec', 'Jalkovec', 'Hrašćica', 'Optujska', 'Gaj Veterani', 'Kućan Marof', 'Zagrebačka 10', 'Tekstilci'];
+  const FN = ['Ivan', 'Marko', 'Luka', 'Josip', 'Matej', 'Petar', 'Tomislav', 'Filip', 'Dario', 'Kristijan', 'Davor', 'Nikola', 'Hrvoje', 'Mario', 'Antonio'];
+  const LN = ['Horvat', 'Kovačić', 'Novak', 'Vrbanić', 'Šimunić', 'Golub', 'Kos', 'Hrženjak', 'Mlinarić', 'Kolarić', 'Hajdinjak', 'Lovrenčić', 'Bistrović', 'Petrić', 'Kranjec'];
+  async function demoSeed() {
+    let added = 0;
+    for (const name of DEMO_TEAMS) {
+      if (S.teams.some(t => T.nameKey(t.name) === T.nameKey(name))) continue;
+      const players = Array.from({ length: 7 }, (_, i) => ({ number: String(i === 0 ? 1 : 2 + T.rnd(20)), name: FN[T.rnd(FN.length)] + ' ' + LN[T.rnd(LN.length)] }));
+      await API.addTeam({ name, captain: players[1].name, phone: '09' + (1 + T.rnd(9)) + ' ' + (100 + T.rnd(900)) + ' ' + (1000 + T.rnd(9000)), email: '', color: '', note: '', players, status: 'approved' });
+      added++;
+    }
+    await T.refresh(); render(); toast(added ? `Dodano ${added} ekipa` : 'Primjer ekipe već postoje', 'ok');
+  }
+  async function demoSim() {
+    if (!S.t.drawnAt) return toast('Najprije napravi ždrijeb.');
+    const order = S.t.matches.slice().sort((a, b) => (a.stage === b.stage ? 0 : a.stage === 'group' ? -1 : 1) || ((a.roundIndex || 0) - (b.roundIndex || 0)) || byTime(a, b));
+    let n = 0;
+    for (const m of order) {
+      if (m.status === 'done') continue;
+      const h = T.resolve(m.home), a = T.resolve(m.away); if (!h || !a) continue;
+      const g = () => [0, 0, 1, 1, 1, 2, 2, 3, 4, 5][T.rnd(10)];
+      m.hg = g(); m.ag = g(); m.ph = m.pa = null;
+      if (m.stage === 'ko' && m.hg === m.ag) { m.ph = 3; m.pa = T.rnd(3); }
+      const pick = tid => { const p = (T.teamById(tid) || {}).players || []; return p.length ? p[T.rnd(p.length)].name : 'Igrač'; };
+      m.scorers = [...Array(m.hg)].map(() => ({ side: 'home', name: pick(h) })).concat([...Array(m.ag)].map(() => ({ side: 'away', name: pick(a) })));
+      m.status = 'done'; n++;
+    }
+    await saveT(n ? `Simulirano ${n} utakmica` : 'Nema utakmica za simulaciju'); render();
+  }
+
+  /* ================= DOGAĐAJI ================= */
+  const actions = {
+    'demo-login': async () => { await API.login(); S.isAdmin = true; await T.refresh(); render(); },
+    'logout': async () => { await API.logout(); S.isAdmin = false; await T.refresh(); render(); },
+    'toggle-reg': async () => { S.t.settings.registrationOpen = !S.t.settings.registrationOpen; await saveT(S.t.settings.registrationOpen ? 'Prijave otvorene' : 'Prijave zatvorene'); render(); },
+    'team-add': () => teamModal(null),
+    'team-edit': el => teamModal(el.dataset.id),
+    'team-status': async el => { try { await API.updateTeam(el.dataset.id, { status: el.dataset.s }); await T.refresh(); render(); toast('Status promijenjen', 'ok'); } catch (e) { toast(T.errText(e), 'err'); } },
+    'draw': async () => {
+      const err = T.validateDraw(); if (err) return toast(err, 'err');
+      if (!(await confirmBox('Izvršiti ždrijeb?', 'Ekipe se nasumično raspoređuju i slaže se raspored. Prijave se zatvaraju.', 'Izvrši ždrijeb'))) return;
+      T.doDraw(); if (await saveT('Ždrijeb obavljen')) { render(); showReveal(true); }
+    },
+    'redraw': async () => {
+      const err = T.validateDraw(); if (err) return toast(err, 'err');
+      if (!(await confirmBox('Ponoviti ždrijeb?', 'Svi dosadašnji parovi, termini i rezultati bit će obrisani.', 'Ponovi ždrijeb', true))) return;
+      T.doDraw(); if (await saveT('Novi ždrijeb obavljen')) { render(); showReveal(true); }
+    },
+    'undraw': async () => {
+      if (!(await confirmBox('Poništiti ždrijeb?', 'Brišu se skupine, raspored i svi rezultati. Ekipe ostaju.', 'Poništi', true))) return;
+      Object.assign(S.t, { groups: [], matches: [], drawnAt: null, drawSeq: [] }); await saveT('Ždrijeb poništen'); render();
+    },
+    'reschedule': async () => {
+      if (!(await confirmBox('Ponovno složiti satnicu?', 'Vremena i tereni svih utakmica iznova se računaju prema postavkama. Rezultati ostaju.', 'Složi'))) return;
+      T.scheduleAll(S.t); await saveT('Satnica ažurirana'); render();
+    },
+    'show-reveal': () => showReveal(false),
+    'edit-match': el => matchModal(el.dataset.id),
+    'm-live': async el => { const m = T.findMatch(el.dataset.id); m.status = 'live'; if (!isNum(m.hg)) { m.hg = 0; m.ag = 0; } await saveT('Utakmica je uživo'); render(); },
+    'm-save': async el => {
+      const m = T.findMatch(el.dataset.id), row = el.closest('[data-mid]');
+      const hg = parseInt($('[name=hg]', row).value, 10), ag = parseInt($('[name=ag]', row).value, 10);
+      if (!isNum(hg) || !isNum(ag) || hg < 0 || ag < 0) return toast('Upiši oba rezultata', 'err');
+      const finish = !el.dataset.keep;
+      if (finish && m.stage === 'ko' && hg === ag) { matchModal(m.id, { hg, ag, status: 'done' }); toast('Neriješeno – upiši kaznene udarce'); return; }
+      m.hg = hg; m.ag = ag; if (!(m.stage === 'ko' && hg === ag)) { m.ph = null; m.pa = null; }
+      m.status = finish ? 'done' : (m.status === 'scheduled' ? 'live' : m.status);
+      await saveT(finish ? 'Rezultat spremljen' : 'Spremljeno'); render();
+    },
+    'copy-schedule': async () => {
+      const lines = S.t.matches.slice().sort(byTime).map(m => {
+        const h = T.resolve(m.home), a = T.resolve(m.away);
+        const sc = m.status === 'done' ? ` ${m.hg}:${m.ag}${isNum(m.ph) ? ` (${m.ph}:${m.pa} pen.)` : ''}` : '';
+        return `${m.time}${+S.t.settings.fields > 1 ? ' T' + m.field : ''}  ${T.stageLabel(m)}:  ${h ? T.teamName(h) : T.srcLabel(m.home)} – ${a ? T.teamName(a) : T.srcLabel(m.away)}${sc}`;
+      });
+      try { await navigator.clipboard.writeText(S.t.settings.name + '\n\n' + lines.join('\n')); toast('Raspored kopiran', 'ok'); } catch (e) { toast('Kopiranje nije dopušteno u ovom pregledniku', 'err'); }
+    },
+    'demo-seed': demoSeed,
+    'demo-sim': demoSim,
+    'demo-reset': async () => { if (!(await confirmBox('Obrisati demo podatke?', 'Brišu se sve ekipe, ždrijeb i rezultati iz ovog preglednika.', 'Obriši', true))) return; T.Demo.reset(); await T.refresh(); render(); }
+  };
+
+  document.addEventListener('click', e => {
+    const tf = e.target.closest('[data-tf]'); if (tf) { UI.teamFilter = tf.dataset.tf; render(); return; }
+    const mf = e.target.closest('[data-mf]'); if (mf) { UI.matchFilter = mf.dataset.mf; render(); return; }
+    const el = e.target.closest('[data-action]'); if (!el || el.tagName === 'INPUT') return;
+    const fn = actions[el.dataset.action]; if (fn) { e.preventDefault(); fn(el, e); }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.matches('.adm-match input')) { e.preventDefault(); const b = e.target.closest('.adm-match').querySelector('[data-action="m-save"]:not([data-keep])'); if (b) b.click(); }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role=button][data-action]')) { e.preventDefault(); e.target.click(); }
+  });
+  document.addEventListener('change', async e => {
+    if (e.target.matches('[data-action="team-seed"]')) {
+      try { await API.updateTeam(e.target.dataset.id, { seeded: e.target.checked }); await T.refresh(); render(); } catch (ex) { toast(T.errText(ex), 'err'); }
+    }
+  });
+  document.addEventListener('submit', async e => {
+    if (e.target.id === 'login-form') {
+      e.preventDefault(); const fd = new FormData(e.target);
+      try { await API.login(String(fd.get('email')).trim(), String(fd.get('password'))); S.isAdmin = true; await T.refresh(); render(); }
+      catch (ex) { $('#login-err').innerHTML = `<div class="notice err">${esc(T.errText(ex))}</div>`; }
+    }
+    if (e.target.id === 'settings-form') {
+      e.preventDefault(); const fd = new FormData(e.target), s = S.t.settings;
+      Object.keys(T.DEFAULT_SETTINGS).forEach(k => {
+        if (T.BOOL_KEYS.includes(k)) s[k] = fd.get(k) === 'on';
+        else if (T.NUM_KEYS.includes(k)) { const v = parseInt(fd.get(k), 10); if (isNum(v)) s[k] = v; }
+        else if (fd.has(k)) s[k] = String(fd.get(k)).trim();
+      });
+      if (s.maxPlayers < s.minPlayers) s.maxPlayers = s.minPlayers;
+      if (!s.name) s.name = T.DEFAULT_SETTINGS.name;
+      await saveT('Postavke spremljene'); render();
+    }
+  });
+  window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+
+  function softRender() {
+    if (current() === 'postavke' && $('#settings-form')) { renderNav(); return; }
+    const a = document.activeElement;
+    if (a && $('#app').contains(a) && /INPUT|SELECT|TEXTAREA/.test(a.tagName)) return;
+    if ($$('.adm-match input').some(i => i.value !== i.defaultValue)) return;
+    const y = window.scrollY; render(); window.scrollTo(0, y);
+  }
+  T.start(isUpdate => (isUpdate ? softRender() : render()));
+})();
+</script>
+</body>
+</html>
