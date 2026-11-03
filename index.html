@@ -8,13 +8,14 @@
 <meta name="theme-color" content="#0a2a66">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Saira+Stencil+One&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="site">
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#pocetna">
+      <img class="logo-img" src="slike/logo.png" alt="" onload="this.nextElementSibling.remove()" onerror="this.remove()">
       <svg viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 37 8v16c0 11-8 18-17 22C11 42 3 35 3 24V8z" fill="#0d3480" stroke="#fff" stroke-width="2.2"/><path d="m10 31 5-7 7 1.5 6 7.5-4 5.5H14z" fill="#fff"/><path d="m14 18 4.5-4.5 6 .8 2.2 5.2-4.5 3.6-6.6-.8z" fill="#cfdcf3"/><path d="m27 24 3.5-2 3.5 3-.8 4.2-4.2.6z" fill="#cfdcf3"/></svg>
       <span><b id="brand-name">Memorijal „Đelac”</b><small id="brand-sub">Malonogometni turnir</small></span>
     </a>
@@ -23,6 +24,7 @@
   </div>
 </header>
 <nav class="tabs" aria-label="Glavni izbornik"><div class="wrap" id="nav"></div></nav>
+<div class="scarf" aria-hidden="true"><div class="scarf-track" id="scarf"></div></div>
 <main><div class="wrap" id="app"><div class="loading"><div class="spinner"></div>Učitavam turnir…</div></div></main>
 <footer class="foot"><div class="wrap">
   <span id="foot-org">Udruga navijača White Stones</span>
@@ -65,6 +67,10 @@
     $('#foot-org').textContent = st.organizer ? 'Organizator: ' + st.organizer : st.name;
     $('#mode-pill').hidden = T.LIVE;
     document.title = st.name;
+    const sc = String(st.scarfText || '').trim();
+    const sEl = $('#scarf');
+    if (sEl && sEl.dataset.t !== sc) { sEl.dataset.t = sc; const one = `<span>${esc(sc)}</span>`.repeat(6); sEl.innerHTML = `<div>${one}</div><div>${one}</div>`; }
+    sEl && (sEl.parentNode.hidden = !sc);
   }
 
   function render() {
@@ -91,7 +97,12 @@
     const rules = String(st.rules || '').split('\n').map(s => s.trim()).filter(Boolean);
     return `
     <section class="hero">
-      <div class="eyebrow">${esc(st.organizer || 'Malonogometni turnir')}</div>
+      <div class="hero-photo" aria-hidden="true"></div>
+      <div class="hero-mark" aria-hidden="true">ĐELAC</div>
+      <div class="fence" aria-hidden="true"></div>
+      <div class="flare" aria-hidden="true"><i></i><i></i></div>
+      <div class="tag" aria-hidden="true">1958 – 2001</div>
+      <div class="banner-strip">${esc(st.organizer || 'Malonogometni turnir')}</div>
       <h1>${esc(st.name)}</h1>
       ${st.subtitle ? `<div class="sub">${esc(st.subtitle)}</div>` : ''}
       <div class="chips">

@@ -259,3 +259,176 @@ footer.foot a{color:#fff}
   .crest{width:26px;height:26px;font-size:.75rem}
   .team-card ol{columns:1}
 }
+
+/* =====================================================================
+   NAVIJAČKI STIL WEB STRANICE (tribina, transparenti, bijelo kamenje)
+   Boje mijenjaš ovdje: --accent je glavna boja kluba.
+   ===================================================================== */
+body.site{
+  --accent:#2f6fe8; --accent-2:#1a4fb8; --bg:#0c0e12; --bg-2:#12151b;
+  --paper:#171b22; --ink:#eef1f6; --muted:#98a1b0; --line:#272d37;
+  --sky:#202733; --sky-2:#2b3546; --navy:#ffffff; --stone:#0c0e12;
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px rgba(0,0,0,.35);
+  --banner:'Anton','Barlow Condensed',Impact,sans-serif;
+  background:var(--bg);color:var(--ink);
+  background-image:
+    radial-gradient(1200px 500px at 85% -10%,rgba(47,111,232,.16),transparent 60%),
+    radial-gradient(900px 400px at -10% 30%,rgba(255,255,255,.05),transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23ffffff' fill-opacity='.025'%3E%3Cpath d='M18 40l12-14 16 3 9 15-8 12H22z'/%3E%3Cpath d='M98 20l9-8 12 2 4 10-8 7-13-2z'/%3E%3Cpath d='M110 110l14-12 18 5 6 16-12 10-20-3z'/%3E%3Cpath d='M40 120l8-6 10 3 2 9-7 5-11-2z'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment:fixed,fixed,scroll;
+}
+body.site a{color:#8fb4ff}
+
+/* zaglavlje i izbornik */
+body.site .top{background:#07080b;border-bottom:1px solid #1d222b}
+body.site .top::after{opacity:.05}
+body.site .brand b{font-family:var(--banner);font-weight:400;letter-spacing:.06em}
+body.site .logo-img{height:44px;width:auto;flex:none;display:block}
+body.site .tabs{background:rgba(12,14,18,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #1d222b;box-shadow:none}
+body.site .tabs a{color:#8d96a5}
+body.site .tabs a:hover{color:#fff}
+body.site .tabs a.on{color:#fff;border-bottom-color:var(--accent)}
+body.site .mode-pill{background:#1c222c;border-color:#2b3442}
+
+/* naslovi kao transparenti */
+body.site h1,body.site h2{font-family:var(--banner);font-weight:400;letter-spacing:.02em}
+body.site .sec-head h2,body.site .card>h2{display:inline-block;background:#f4f2ec;color:#0c0e12;padding:6px 16px 4px;transform:rotate(-1.2deg) skewX(-4deg);
+  box-shadow:4px 4px 0 var(--accent);font-size:1.75rem;margin-bottom:.6em;
+  clip-path:polygon(0 4%,3% 0,22% 3%,47% 0,71% 4%,100% 0,99% 52%,100% 100%,76% 96%,49% 100%,24% 97%,2% 100%,0 60%)}
+body.site .sec-head h2{margin-bottom:0}
+body.site h3{color:#fff}
+body.site h4{color:var(--muted)}
+body.site .lead{color:var(--muted)}
+
+/* naslovna – tribina */
+body.site .hero{background:#08090c;border:1px solid #1f2530;border-radius:20px;padding:40px 28px 34px;isolation:isolate}
+body.site .hero::before{display:none}
+body.site .hero-photo{position:absolute;inset:0;z-index:-2;background:url("slike/naslovna.jpg") center/cover no-repeat;opacity:.38;filter:grayscale(.35) contrast(1.1)}
+body.site .hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(60% 80% at 100% 0%,rgba(47,111,232,.45),transparent 70%),
+    radial-gradient(50% 70% at 0% 100%,rgba(255,255,255,.12),transparent 70%),
+    linear-gradient(180deg,rgba(8,9,12,.2),rgba(8,9,12,.85))}
+body.site .hero-mark{position:absolute;right:-10px;bottom:-34px;z-index:-1;font-family:var(--banner);font-size:clamp(7rem,24vw,15rem);line-height:1;
+  color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.09);letter-spacing:.02em;pointer-events:none;user-select:none}
+body.site .banner-strip{display:inline-block;background:#f4f2ec;color:#0c0e12;font-family:var(--banner);text-transform:uppercase;letter-spacing:.12em;
+  font-size:1rem;padding:7px 16px 5px;margin-bottom:16px;transform:rotate(-2deg);box-shadow:0 6px 18px rgba(0,0,0,.4),4px 4px 0 var(--accent);
+  clip-path:polygon(0 8%,4% 0,30% 6%,58% 0,82% 5%,100% 0,98% 50%,100% 100%,70% 94%,40% 100%,12% 95%,0 100%,2% 50%)}
+body.site .hero h1{font-size:clamp(2.6rem,8vw,5rem);line-height:.95;max-width:14ch;text-shadow:0 4px 30px rgba(0,0,0,.6);margin-bottom:12px}
+body.site .hero .sub{color:#d6dbe4;font-size:1.15rem}
+body.site .chip{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+body.site .countdown div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px}
+body.site .countdown b{font-family:var(--banner);font-weight:400;font-size:2.2rem}
+body.site .btn.white{background:#f4f2ec;color:#0c0e12}
+body.site .btn.outline{border-color:rgba(255,255,255,.4)}
+body.site .btn.primary{background:var(--accent)}
+body.site .btn.ghost{background:var(--sky);color:#fff}
+body.site .btn.ghost:hover{background:var(--sky-2)}
+
+/* kartice */
+body.site .card{background:var(--paper);border:1px solid var(--line)}
+body.site .stat b{font-family:var(--banner);font-weight:400;font-size:2.4rem;color:#fff}
+body.site .stat{border-left:4px solid var(--accent)}
+body.site .empty{background:var(--paper);border-color:#2f3846}
+body.site .empty b{color:#fff}
+body.site .news{background:#2a2410;border-color:#5a4a16;color:#f3e2a6}
+body.site .notice{background:#162238;color:#bcd0f5}
+body.site .notice.warn{background:#2a2410;color:#f3e2a6}
+body.site .notice.err{background:#3a1219;color:#ffc2cb}
+body.site ul.rules li{border-color:var(--line)}
+body.site ul.rules li::before{background:var(--accent);color:#fff}
+body.site .podium{background:linear-gradient(135deg,#2b2410,#171b22);border-color:#5a4a16}
+body.site .podium h3{font-family:var(--banner);font-weight:400;color:#fff}
+
+/* utakmice, tablice, kostur */
+body.site .match{border:1px solid var(--line);border-left-width:4px}
+body.site .match.is-done{border-left-color:#3a4555}
+body.site .m-time{color:#fff}
+body.site .m-field{background:var(--sky);color:#fff}
+body.site .m-score>b{font-family:var(--banner);font-weight:400;font-size:1.9rem}
+body.site .m-team.win .tn{color:#fff}
+body.site .slot-h{color:#fff;font-family:var(--banner);font-weight:400;letter-spacing:.08em}
+body.site .slot-h::after{background:var(--line)}
+body.site .seg{background:var(--paper);border:1px solid var(--line)}
+body.site .seg button.on{background:var(--accent);color:#fff}
+body.site .standings tr.q .pos span,body.site .qdot{background:var(--accent)}
+body.site .standings .pts{color:#fff}
+body.site .crest.ph{background:#232a35;color:#5f6979}
+body.site .b-match{background:var(--paper);border-color:var(--line)}
+body.site .b-head{background:#1d222b}
+body.site .b-row{border-color:var(--line)}
+body.site .b-row.win{background:#1b2a45}
+body.site .b-row.win .tn{color:#fff}
+body.site .b-sc{font-family:var(--banner);font-weight:400}
+body.site .scorers td.g{font-family:var(--banner);font-weight:400;color:#fff}
+body.site .scorers tr.top td.g{color:var(--gold)}
+body.site .list{background:transparent}
+body.site .badge{background:var(--sky);color:#dfe6f3}
+body.site .badge.done{background:#232a35;color:var(--muted)}
+body.site .badge.pending{background:#3a2f10;color:#f3d27a}
+body.site .badge.seed{background:#3a2f10;color:#f3d27a}
+
+/* forma za prijavu */
+body.site input[type=text],body.site input[type=email],body.site input[type=tel],body.site input[type=number],
+body.site input[type=password],body.site input[type=date],body.site input[type=time],body.site select,body.site textarea{
+  background:#0f1217;border-color:#2b323e;color:var(--ink)}
+body.site input::placeholder,body.site textarea::placeholder{color:#5f6878}
+body.site .icon-btn{background:var(--sky);color:#fff}
+body.site .modal{background:var(--paper);color:var(--ink)}
+
+/* podnožje */
+body.site footer.foot{background:#07080b;border-top:1px solid #1d222b}
+body.site .brand{color:#fff}
+body.site .foot a{color:#fff}
+
+/* ================= ULTRAS DODACI ================= */
+body.site{--flare:#ff5a1f;--stencil:'Saira Stencil One','Anton',Impact,sans-serif;--scarf-a:#0b2c74;--scarf-b:#f4f2ec}
+
+/* šal – pletena traka s resama */
+body.site .scarf{position:relative;height:46px;overflow:hidden;background:var(--scarf-a);
+  border-top:3px solid var(--scarf-b);border-bottom:3px solid var(--scarf-b);box-shadow:0 6px 20px rgba(0,0,0,.45)}
+body.site .scarf::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M0 0l4 4 4-4M0 4l4 4 4-4' fill='none' stroke='%23000' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E")}
+body.site .scarf::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0 220px,rgba(255,255,255,.04) 220px 222px),linear-gradient(180deg,rgba(255,255,255,.12),transparent 40%,rgba(0,0,0,.25))}
+body.site .scarf-track{display:flex;width:max-content;animation:scarf 60s linear infinite;height:100%}
+body.site .scarf-track>div{display:flex}
+body.site .scarf-track span{font-family:var(--banner);color:var(--scarf-b);font-size:1.35rem;letter-spacing:.14em;line-height:40px;padding:0 28px;white-space:nowrap;text-transform:uppercase}
+@keyframes scarf{to{transform:translateX(-50%)}}
+
+/* ograda tribine */
+body.site .fence{position:absolute;left:0;right:0;top:0;height:46%;z-index:-1;pointer-events:none;opacity:.10;
+  background:repeating-linear-gradient(45deg,#fff 0 1px,transparent 1px 16px),repeating-linear-gradient(-45deg,#fff 0 1px,transparent 1px 16px);
+  -webkit-mask-image:linear-gradient(180deg,#000,transparent);mask-image:linear-gradient(180deg,#000,transparent)}
+
+/* baklja i dim */
+body.site .flare{position:absolute;left:-8%;bottom:-30%;width:70%;height:90%;z-index:-1;pointer-events:none}
+body.site .flare i{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,120,40,.55),rgba(255,70,20,.22) 45%,transparent 75%);filter:blur(18px);animation:flicker 2.6s ease-in-out infinite}
+body.site .flare i+i{left:40%;top:-20%;width:80%;background:radial-gradient(closest-side,rgba(200,210,230,.16),transparent 70%);filter:blur(30px);animation:smoke 12s ease-in-out infinite}
+@keyframes flicker{0%,100%{opacity:.85;transform:scale(1)}30%{opacity:1;transform:scale(1.04)}55%{opacity:.7;transform:scale(.98)}80%{opacity:.95}}
+@keyframes smoke{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,-8%) scale(1.15)}}
+
+/* grafit / stencil */
+body.site .hero-mark{font-family:var(--stencil);-webkit-text-stroke:0;color:rgba(255,255,255,.06)}
+body.site .tag{position:absolute;right:26px;top:24px;font-family:var(--stencil);font-size:clamp(1.1rem,2.6vw,1.6rem);color:var(--flare);
+  transform:rotate(4deg);text-shadow:0 0 18px rgba(255,90,31,.45);letter-spacing:.06em;opacity:.9}
+body.site .hero h1{text-transform:uppercase}
+
+/* transparent s ušivenim rubom i konopcima */
+body.site .sec-head h2,body.site .card>h2,body.site .banner-strip{position:relative;clip-path:none;border-radius:2px;
+  outline:2px dashed rgba(12,14,18,.28);outline-offset:-7px}
+body.site .sec-head h2::before,body.site .sec-head h2::after,body.site .card>h2::before,body.site .card>h2::after{content:"";position:absolute;top:-10px;width:2px;height:14px;background:#b9b3a3}
+body.site .sec-head h2::before,body.site .card>h2::before{left:10px;transform:rotate(-14deg)}
+body.site .sec-head h2::after,body.site .card>h2::after{right:10px;transform:rotate(14deg)}
+body.site .sec-head h2,body.site .card>h2{padding:8px 20px 6px;font-size:1.9rem;box-shadow:5px 5px 0 var(--accent),0 10px 24px rgba(0,0,0,.35)}
+
+@media (prefers-reduced-motion: reduce){
+  body.site .scarf-track,body.site .flare i{animation:none}
+}
+@media(max-width:520px){
+  body.site .scarf{height:40px}
+  body.site .scarf-track span{font-size:1.1rem;line-height:34px}
+  body.site .tag{top:auto;bottom:18px;right:16px}
+}
+@media(max-width:520px){body.site .hero h1{font-size:clamp(1.9rem,9.5vw,3rem);overflow-wrap:anywhere;hyphens:auto}}

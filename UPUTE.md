@@ -57,6 +57,17 @@ Vlastitu domenu (npr. `turnir-djelac.hr`) možeš dodati u *Settings → Pages �
 4. **Dan turnira**: u kartici *Utakmice* upisuješ rezultat i pritišćeš **✓ Završi**. Gumb **▶ Počni** stavlja utakmicu u „uživo”. Pod *Detalji* su strijelci, kazneni udarci i promjena termina. Tablice, prolaznici u eliminacije, kostur i lista strijelaca računaju se sami, a stranica se posjetiteljima osvježava sama.
 5. Ako kasnite ili promijeniš početak: *Ždrijeb → Ponovno složi satnicu* iznova računa vremena, a rezultati ostaju. Za kratke obavijesti posjetiteljima koristi polje *Obavijest* u postavkama.
 
+## Vaše slike (logo i fotografija tribine)
+
+Stranica sama prikazuje vaše slike ako ih staviš u repozitorij pod točno ovim imenima:
+
+- `slike/logo.png`: logo ili grb u zaglavlju (najbolje PNG s prozirnom pozadinom)
+- `slike/naslovna.jpg`: velika fotografija u pozadini naslovnice, npr. koreografija ili transparent s tribine
+
+Na GitHubu: **Add file → Upload files**, povuci slike i u polje za ime upiši `slike/` ispred imena datoteke (ili napravi mapu `slike` i u nju ubaci datoteke). Dok slika nema, stranica izgleda uredno i bez njih.
+
+Boje mijenjaš na dnu `style.css`: `--accent` je glavna boja (sada plava).
+
 ## Napomene
 
 - Besplatni Supabase projekt **pauzira se nakon 7 dana bez aktivnosti**. Ako je stranica dugo mirovala, prijavi se na supabase.com i klikni *Restore*. Tijekom prijava i turnira to nije problem.

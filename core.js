@@ -46,7 +46,8 @@
     maxTeams: 16,
     minPlayers: 5,
     maxPlayers: 10,
-    registrationOpen: true
+    registrationOpen: true,
+    scarfText: 'WHITE STONES ✦ MEMORIJAL ĐELAC ✦ VARAŽDIN'
   };
   const NUM_KEYS = ['groupsCount', 'advance', 'matchMinutes', 'breakMinutes', 'koBreak', 'fields', 'maxTeams', 'minPlayers', 'maxPlayers'];
   const BOOL_KEYS = ['doubleRound', 'thirdPlace', 'registrationOpen'];
