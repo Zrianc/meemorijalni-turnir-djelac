@@ -433,3 +433,39 @@ body.site .gal-grid img,body.site .gal-grid img:first-child{grid-column:auto;gri
 @media(max-width:520px){body.site .hero h1{font-size:clamp(1.7rem,8.6vw,2.8rem);overflow-wrap:break-word}}
 body.site .scarf-hang.ws{margin:22px 0 30px}
 body.site .scarf-hang.ws img{transform:none;filter:drop-shadow(0 10px 20px rgba(0,0,0,.6))}
+
+/* =====================================================================
+   APLIKACIJA ZA ORGANIZATORE – White Stones stil (svijetli sadržaj radi čitljivosti uz teren)
+   ===================================================================== */
+body.app{--orange:#f2661c;--blue:#2438b8;--black:#0a0a0a;--banner:'Anton','Barlow Condensed',Impact,sans-serif;
+  --navy:#0a0a0a;--sky:#eef0f6;--sky-2:#dde2f0;background:#f2f2f0}
+body.app .top{background:var(--black)}
+body.app .top::after{display:none}
+body.app .logo-img{height:48px;width:auto;display:block;flex:none}
+body.app .brand b{font-family:var(--banner);font-weight:400;letter-spacing:.06em;font-size:1.3rem}
+body.app .tabs{background:var(--black);border-top:1px solid #222;box-shadow:none}
+body.app .tabs a,body.app .tabs button{color:#9a9a9a}
+body.app .tabs a:hover,body.app .tabs button:hover{color:#fff}
+body.app .tabs a.on{color:#fff;border-bottom-color:var(--orange)}
+body.app .stripe{height:14px;background:linear-gradient(180deg,#fff 0 2px,var(--orange) 2px 6px,#fff 6px 8px,var(--blue) 8px 14px)}
+body.app .tabs{position:static}
+body.app .stripe{position:sticky;top:0;z-index:19}
+body.app h2{font-family:var(--banner);font-weight:400;letter-spacing:.01em}
+body.app .sec-head h2,body.app .settings .sec-head h2{padding-bottom:12px;background:linear-gradient(180deg,var(--orange) 0 4px,#fff 4px 6px,var(--blue) 6px 10px) left bottom/90px 10px no-repeat}
+body.app .card{border-radius:4px;border-top:4px solid var(--black)}
+body.app .btn{border-radius:4px}
+body.app .btn.primary{background:var(--orange);color:#fff}
+body.app .btn.outline{border-color:rgba(255,255,255,.5)}
+body.app .btn.ghost{background:#e9e9e6;color:var(--black)}
+body.app .btn.ghost:hover{background:#dcdcd8}
+body.app .seg button.on{background:var(--black);color:#fff}
+body.app .badge.live,body.app .btn.live{background:var(--orange);color:#fff}
+body.app .adm-match.is-live{border-left-color:var(--orange)}
+body.app .adm-match.is-done{border-left-color:var(--blue)}
+body.app .standings tr.q .pos span,body.app .qdot{background:var(--blue)}
+body.app input:focus,body.app select:focus,body.app textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,102,28,.18)}
+body.app .check input{accent-color:var(--orange)}
+body.app .settings h3{font-family:var(--banner);font-weight:400;text-transform:uppercase;letter-spacing:.03em;font-size:1.3rem;color:var(--blue)}
+body.app .notice{background:#e8ebf7;color:#1b2a7a;border-left:4px solid var(--blue);border-radius:4px}
+body.app .notice.warn{background:#fff1e6;color:#7a3a0c;border-left-color:var(--orange)}
+body.app .mode-pill{background:#1f1f1f;border-color:#333}

@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0a2a66">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
   .adm-team{display:flex;flex-direction:column;gap:10px}
@@ -42,10 +42,11 @@
   .settings h3:first-child{border-top:0;padding-top:0}
 </style>
 </head>
-<body>
+<body class="app">
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#ekipe">
+      <img class="logo-img" src="slike/logo.png" alt="" onload="this.nextElementSibling.remove()" onerror="this.remove()">
       <svg viewBox="0 0 40 48" aria-hidden="true"><path d="M20 2 37 8v16c0 11-8 18-17 22C11 42 3 35 3 24V8z" fill="#0d3480" stroke="#fff" stroke-width="2.2"/><path d="m10 31 5-7 7 1.5 6 7.5-4 5.5H14z" fill="#fff"/><path d="m14 18 4.5-4.5 6 .8 2.2 5.2-4.5 3.6-6.6-.8z" fill="#cfdcf3"/><path d="m27 24 3.5-2 3.5 3-.8 4.2-4.2.6z" fill="#cfdcf3"/></svg>
       <span><b>Organizator</b><small id="brand-sub">Memorijal „Đelac”</small></span>
     </a>
@@ -55,6 +56,7 @@
   </div>
 </header>
 <nav class="tabs" aria-label="Izbornik aplikacije"><div class="wrap" id="nav"></div></nav>
+<div class="stripe" aria-hidden="true"></div>
 <main><div class="wrap" id="app"><div class="loading"><div class="spinner"></div>Učitavam…</div></div></main>
 <div id="modal-root"></div>
 <div id="toast"></div>
