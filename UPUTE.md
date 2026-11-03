@@ -57,16 +57,22 @@ Vlastitu domenu (npr. `turnir-djelac.hr`) možeš dodati u *Settings → Pages �
 4. **Dan turnira**: u kartici *Utakmice* upisuješ rezultat i pritišćeš **✓ Završi**. Gumb **▶ Počni** stavlja utakmicu u „uživo”. Pod *Detalji* su strijelci, kazneni udarci i promjena termina. Tablice, prolaznici u eliminacije, kostur i lista strijelaca računaju se sami, a stranica se posjetiteljima osvježava sama.
 5. Ako kasnite ili promijeniš početak: *Ždrijeb → Ponovno složi satnicu* iznova računa vremena, a rezultati ostaju. Za kratke obavijesti posjetiteljima koristi polje *Obavijest* u postavkama.
 
-## Vaše slike (logo i fotografija tribine)
+## Slike (mapa `slike`)
 
-Stranica sama prikazuje vaše slike ako ih staviš u repozitorij pod točno ovim imenima:
+Mapu `slike` prenesi na GitHub zajedno s ostalim datotekama (na GitHubu: **Add file → Upload files** i povuci cijelu mapu). U njoj je:
 
-- `slike/logo.png`: logo ili grb u zaglavlju (najbolje PNG s prozirnom pozadinom)
-- `slike/naslovna.jpg`: velika fotografija u pozadini naslovnice, npr. koreografija ili transparent s tribine
+| Datoteka | Gdje se prikazuje |
+|---|---|
+| `logo.png` | grb u zaglavlju i na naslovnici |
+| `naslovna.jpg` | fotografija tribine iza naslova |
+| `sal-grad.jpg` | šal sa zidinama, iznad „O memorijalu” |
+| `sal-1990.jpg` | šal iznad podnožja na svim stranicama |
+| `transparent.jpg` | transparent ispod naslovnice i na vrhu podstranica |
+| `galerija-1.jpg` … `galerija-8.jpg` | galerija „S tribine” |
 
-Na GitHubu: **Add file → Upload files**, povuci slike i u polje za ime upiši `slike/` ispred imena datoteke (ili napravi mapu `slike` i u nju ubaci datoteke). Dok slika nema, stranica izgleda uredno i bez njih.
+Sliku zamijeniš tako da preneseš novu pod istim imenom. Za galeriju dodaj `galerija-3.jpg`, `galerija-4.jpg` itd. i one se same pojave. Ako neke slike nema, taj dio stranice se jednostavno ne prikaže.
 
-Boje mijenjaš na dnu `style.css`: `--accent` je glavna boja (sada plava).
+Boje mijenjaš na dnu `style.css` (`--orange`, `--blue`).
 
 ## Napomene
 

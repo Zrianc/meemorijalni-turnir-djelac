@@ -261,174 +261,175 @@ footer.foot a{color:#fff}
 }
 
 /* =====================================================================
-   NAVIJAČKI STIL WEB STRANICE (tribina, transparenti, bijelo kamenje)
-   Boje mijenjaš ovdje: --accent je glavna boja kluba.
+   TEMA WEB STRANICE – crna, narančasta, plava, bijela
+   Boje mijenjaš ovdje.
    ===================================================================== */
 body.site{
-  --accent:#2f6fe8; --accent-2:#1a4fb8; --bg:#0c0e12; --bg-2:#12151b;
-  --paper:#171b22; --ink:#eef1f6; --muted:#98a1b0; --line:#272d37;
-  --sky:#202733; --sky-2:#2b3546; --navy:#ffffff; --stone:#0c0e12;
-  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px rgba(0,0,0,.35);
+  --orange:#ff6b1a; --blue:#1f5fe0; --white:#ffffff; --black:#0a0a0a;
+  --accent:var(--orange);
+  --paper:#141414; --ink:#f5f5f5; --muted:#9a9a9a; --line:#262626;
+  --sky:#1f1f1f; --sky-2:#2a2a2a; --navy:#ffffff; --stone:#0a0a0a;
+  --shadow:none;
   --banner:'Anton','Barlow Condensed',Impact,sans-serif;
-  background:var(--bg);color:var(--ink);
-  background-image:
-    radial-gradient(1200px 500px at 85% -10%,rgba(47,111,232,.16),transparent 60%),
-    radial-gradient(900px 400px at -10% 30%,rgba(255,255,255,.05),transparent 60%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23ffffff' fill-opacity='.025'%3E%3Cpath d='M18 40l12-14 16 3 9 15-8 12H22z'/%3E%3Cpath d='M98 20l9-8 12 2 4 10-8 7-13-2z'/%3E%3Cpath d='M110 110l14-12 18 5 6 16-12 10-20-3z'/%3E%3Cpath d='M40 120l8-6 10 3 2 9-7 5-11-2z'/%3E%3C/g%3E%3C/svg%3E");
-  background-attachment:fixed,fixed,scroll;
+  background:var(--black);color:var(--ink);
 }
-body.site a{color:#8fb4ff}
-
-/* zaglavlje i izbornik */
-body.site .top{background:#07080b;border-bottom:1px solid #1d222b}
-body.site .top::after{opacity:.05}
-body.site .brand b{font-family:var(--banner);font-weight:400;letter-spacing:.06em}
-body.site .logo-img{height:44px;width:auto;flex:none;display:block}
-body.site .tabs{background:rgba(12,14,18,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #1d222b;box-shadow:none}
-body.site .tabs a{color:#8d96a5}
-body.site .tabs a:hover{color:#fff}
-body.site .tabs a.on{color:#fff;border-bottom-color:var(--accent)}
-body.site .mode-pill{background:#1c222c;border-color:#2b3442}
-
-/* naslovi kao transparenti */
-body.site h1,body.site h2{font-family:var(--banner);font-weight:400;letter-spacing:.02em}
-body.site .sec-head h2,body.site .card>h2{display:inline-block;background:#f4f2ec;color:#0c0e12;padding:6px 16px 4px;transform:rotate(-1.2deg) skewX(-4deg);
-  box-shadow:4px 4px 0 var(--accent);font-size:1.75rem;margin-bottom:.6em;
-  clip-path:polygon(0 4%,3% 0,22% 3%,47% 0,71% 4%,100% 0,99% 52%,100% 100%,76% 96%,49% 100%,24% 97%,2% 100%,0 60%)}
-body.site .sec-head h2{margin-bottom:0}
+body.site a{color:var(--orange)}
+body.site h1,body.site h2{font-family:var(--banner);font-weight:400;text-transform:uppercase;letter-spacing:.01em}
 body.site h3{color:#fff}
-body.site h4{color:var(--muted)}
-body.site .lead{color:var(--muted)}
+body.site .lead,body.site h4{color:var(--muted)}
 
-/* naslovna – tribina */
-body.site .hero{background:#08090c;border:1px solid #1f2530;border-radius:20px;padding:40px 28px 34px;isolation:isolate}
-body.site .hero::before{display:none}
-body.site .hero-photo{position:absolute;inset:0;z-index:-2;background:url("slike/naslovna.jpg") center/cover no-repeat;opacity:.38;filter:grayscale(.35) contrast(1.1)}
-body.site .hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:
-    radial-gradient(60% 80% at 100% 0%,rgba(47,111,232,.45),transparent 70%),
-    radial-gradient(50% 70% at 0% 100%,rgba(255,255,255,.12),transparent 70%),
-    linear-gradient(180deg,rgba(8,9,12,.2),rgba(8,9,12,.85))}
-body.site .hero-mark{position:absolute;right:-10px;bottom:-34px;z-index:-1;font-family:var(--banner);font-size:clamp(7rem,24vw,15rem);line-height:1;
-  color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.09);letter-spacing:.02em;pointer-events:none;user-select:none}
-body.site .banner-strip{display:inline-block;background:#f4f2ec;color:#0c0e12;font-family:var(--banner);text-transform:uppercase;letter-spacing:.12em;
-  font-size:1rem;padding:7px 16px 5px;margin-bottom:16px;transform:rotate(-2deg);box-shadow:0 6px 18px rgba(0,0,0,.4),4px 4px 0 var(--accent);
-  clip-path:polygon(0 8%,4% 0,30% 6%,58% 0,82% 5%,100% 0,98% 50%,100% 100%,70% 94%,40% 100%,12% 95%,0 100%,2% 50%)}
-body.site .hero h1{font-size:clamp(2.6rem,8vw,5rem);line-height:.95;max-width:14ch;text-shadow:0 4px 30px rgba(0,0,0,.6);margin-bottom:12px}
-body.site .hero .sub{color:#d6dbe4;font-size:1.15rem}
-body.site .chip{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
-body.site .countdown div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px}
+/* zaglavlje, izbornik, tri trake */
+body.site .top{background:var(--black)}
+body.site .top::after{display:none}
+body.site .brand{color:#fff}
+body.site .brand b{font-family:var(--banner);font-weight:400;letter-spacing:.05em;font-size:1.35rem}
+body.site .logo-img{height:46px;width:auto;flex:none;display:block}
+body.site .tabs{background:var(--black);border-top:1px solid var(--line);box-shadow:none}
+body.site .tabs a{color:#8a8a8a}
+body.site .tabs a:hover{color:#fff}
+body.site .tabs a.on{color:#fff;border-bottom-color:var(--orange)}
+body.site .stripe{display:flex;height:6px}
+body.site .stripe i{flex:1}
+body.site .stripe i:nth-child(1){background:var(--orange)}
+body.site .stripe i:nth-child(2){background:var(--white)}
+body.site .stripe i:nth-child(3){background:var(--blue)}
+body.site .mode-pill{background:#1f1f1f;border-color:#333}
+
+/* naslovi sekcija */
+body.site .sec-head h2,body.site .card>h2{font-size:2.1rem;line-height:1;padding-bottom:8px;margin-bottom:.5em;
+  background:linear-gradient(90deg,var(--orange) 0 48px,var(--blue) 48px 72px,transparent 72px) left bottom/100% 4px no-repeat}
+body.site .sec-head h2{margin-bottom:0}
+
+/* naslovnica */
+body.site .hero{background:var(--black);border-radius:0;padding:56px 28px 44px;margin:0 -18px 28px;isolation:isolate;border-bottom:1px solid var(--line)}
+body.site .hero::before{content:"";position:absolute;inset:0;z-index:-1;opacity:1;right:auto;top:auto;width:auto;height:auto;
+  background:linear-gradient(90deg,rgba(10,10,10,.95) 0%,rgba(10,10,10,.75) 55%,rgba(10,10,10,.35) 100%),url("slike/naslovna.jpg") center/cover no-repeat}
+body.site .hero::after{content:"";position:absolute;right:0;top:0;bottom:0;width:min(34%,320px);z-index:-1;
+  background:linear-gradient(115deg,transparent 0 30%,var(--orange) 30% 62%,var(--blue) 62% 100%);opacity:.9;
+  clip-path:polygon(35% 0,100% 0,100% 100%,0 100%)}
+body.site .banner-strip{display:inline-block;background:var(--orange);color:var(--black);font-family:var(--banner);text-transform:uppercase;letter-spacing:.1em;font-size:.95rem;padding:6px 12px 4px;margin-bottom:18px}
+body.site .hero h1{font-size:clamp(2.4rem,7.5vw,5.2rem);line-height:.92;max-width:13ch;margin-bottom:14px}
+body.site .hero .sub{color:#d0d0d0;font-size:1.15rem}
+body.site .chip{background:transparent;border:1px solid #3a3a3a;border-radius:0}
+body.site .countdown div{background:transparent;border:1px solid #3a3a3a;border-radius:0}
 body.site .countdown b{font-family:var(--banner);font-weight:400;font-size:2.2rem}
-body.site .btn.white{background:#f4f2ec;color:#0c0e12}
-body.site .btn.outline{border-color:rgba(255,255,255,.4)}
-body.site .btn.primary{background:var(--accent)}
-body.site .btn.ghost{background:var(--sky);color:#fff}
-body.site .btn.ghost:hover{background:var(--sky-2)}
+body.site .btn{border-radius:0;text-transform:uppercase;letter-spacing:.04em}
+body.site .btn.white{background:var(--orange);color:var(--black)}
+body.site .btn.outline{border:2px solid #fff;color:#fff}
+body.site .btn.primary{background:var(--orange);color:var(--black)}
+body.site .btn.ghost{background:#1f1f1f;color:#fff}
+@media(min-width:1156px){body.site .hero{margin-left:calc((1120px - 100vw)/2 - 0px);margin-right:calc((1120px - 100vw)/2);padding-left:calc((100vw - 1120px)/2 + 18px);padding-right:calc((100vw - 1120px)/2 + 18px)}}
+body.site main{padding-top:0}
 
 /* kartice */
-body.site .card{background:var(--paper);border:1px solid var(--line)}
-body.site .stat b{font-family:var(--banner);font-weight:400;font-size:2.4rem;color:#fff}
-body.site .stat{border-left:4px solid var(--accent)}
-body.site .empty{background:var(--paper);border-color:#2f3846}
+body.site .card,body.site .match,body.site .b-match,body.site .empty{background:var(--paper);border:1px solid var(--line);border-radius:0;box-shadow:none}
+body.site .stat{border-top:4px solid var(--orange)}
+body.site .grid .stat:nth-child(even){border-top-color:var(--blue)}
+body.site .stat b{font-family:var(--banner);font-weight:400;font-size:2.6rem;color:#fff}
 body.site .empty b{color:#fff}
-body.site .news{background:#2a2410;border-color:#5a4a16;color:#f3e2a6}
-body.site .notice{background:#162238;color:#bcd0f5}
-body.site .notice.warn{background:#2a2410;color:#f3e2a6}
-body.site .notice.err{background:#3a1219;color:#ffc2cb}
+body.site .news{background:var(--orange);border:0;border-radius:0;color:var(--black)}
+body.site .notice{background:#1a1a1a;color:#cfcfcf;border-left:4px solid var(--blue);border-radius:0}
+body.site .notice.warn{border-left-color:var(--orange)}
+body.site .notice.err{background:#2a1010;color:#ffc2c2;border-left-color:#e0243f}
 body.site ul.rules li{border-color:var(--line)}
-body.site ul.rules li::before{background:var(--accent);color:#fff}
-body.site .podium{background:linear-gradient(135deg,#2b2410,#171b22);border-color:#5a4a16}
-body.site .podium h3{font-family:var(--banner);font-weight:400;color:#fff}
+body.site ul.rules li::before{background:var(--orange);color:var(--black);border-radius:0}
+body.site .podium{background:var(--paper);border:0;border-left:6px solid var(--orange);border-radius:0}
+body.site .podium h3{font-family:var(--banner);font-weight:400;color:#fff;font-size:2rem}
+
+/* galerija (slike/galerija-1.jpg … galerija-6.jpg) */
+body.site .gallery:not(:has(img)){display:none}
+body.site .gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:6px}
+body.site .gal-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:grayscale(.15) contrast(1.05)}
+body.site .gal-grid img:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto;height:100%}
+@media(max-width:600px){body.site .gal-grid img:first-child{grid-column:auto;grid-row:auto;aspect-ratio:4/3}}
 
 /* utakmice, tablice, kostur */
-body.site .match{border:1px solid var(--line);border-left-width:4px}
-body.site .match.is-done{border-left-color:#3a4555}
+body.site .match{border-left:4px solid #333}
+body.site .match.is-live{border-left-color:var(--orange)}
+body.site .match.is-done{border-left-color:var(--blue)}
+body.site .badge{border-radius:0;background:#222;color:#ddd}
+body.site .badge.live{background:var(--orange);color:var(--black)}
+body.site .badge.pending,body.site .badge.seed{background:#2b1d10;color:var(--orange)}
 body.site .m-time{color:#fff}
-body.site .m-field{background:var(--sky);color:#fff}
-body.site .m-score>b{font-family:var(--banner);font-weight:400;font-size:1.9rem}
+body.site .m-field{background:#222;color:#fff;border-radius:0}
+body.site .m-score>b{font-family:var(--banner);font-weight:400;font-size:2rem}
 body.site .m-team.win .tn{color:#fff}
-body.site .slot-h{color:#fff;font-family:var(--banner);font-weight:400;letter-spacing:.08em}
+body.site .slot-h{color:var(--orange);font-family:var(--banner);font-weight:400;letter-spacing:.06em}
 body.site .slot-h::after{background:var(--line)}
-body.site .seg{background:var(--paper);border:1px solid var(--line)}
-body.site .seg button.on{background:var(--accent);color:#fff}
-body.site .standings tr.q .pos span,body.site .qdot{background:var(--accent)}
-body.site .standings .pts{color:#fff}
-body.site .crest.ph{background:#232a35;color:#5f6979}
-body.site .b-match{background:var(--paper);border-color:var(--line)}
-body.site .b-head{background:#1d222b}
+body.site .seg{background:var(--paper);border:1px solid var(--line);border-radius:0;box-shadow:none}
+body.site .seg button{border-radius:0}
+body.site .seg button.on{background:#fff;color:var(--black)}
+body.site .standings tr.q .pos span,body.site .qdot{background:var(--blue);color:#fff;border-radius:0}
+body.site .standings .pts{color:var(--orange)}
+body.site .crest{border-radius:0}
+body.site .crest.ph{background:#222;color:#666}
+body.site .b-head{background:#1b1b1b}
 body.site .b-row{border-color:var(--line)}
-body.site .b-row.win{background:#1b2a45}
+body.site .b-row.win{background:#16233f}
 body.site .b-row.win .tn{color:#fff}
 body.site .b-sc{font-family:var(--banner);font-weight:400}
 body.site .scorers td.g{font-family:var(--banner);font-weight:400;color:#fff}
-body.site .scorers tr.top td.g{color:var(--gold)}
+body.site .scorers tr.top td.g{color:var(--orange)}
 body.site .list{background:transparent}
-body.site .badge{background:var(--sky);color:#dfe6f3}
-body.site .badge.done{background:#232a35;color:var(--muted)}
-body.site .badge.pending{background:#3a2f10;color:#f3d27a}
-body.site .badge.seed{background:#3a2f10;color:#f3d27a}
 
-/* forma za prijavu */
+/* forma */
 body.site input[type=text],body.site input[type=email],body.site input[type=tel],body.site input[type=number],
 body.site input[type=password],body.site input[type=date],body.site input[type=time],body.site select,body.site textarea{
-  background:#0f1217;border-color:#2b323e;color:var(--ink)}
-body.site input::placeholder,body.site textarea::placeholder{color:#5f6878}
-body.site .icon-btn{background:var(--sky);color:#fff}
-body.site .modal{background:var(--paper);color:var(--ink)}
+  background:#0f0f0f;border-color:#333;color:var(--ink);border-radius:0}
+body.site input:focus,body.site select:focus,body.site textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,26,.2)}
+body.site .check input{accent-color:var(--orange)}
+body.site .icon-btn{background:#1f1f1f;color:#fff;border-radius:0}
+body.site .modal{background:var(--paper);color:var(--ink);border-radius:0}
 
-/* podnožje */
-body.site footer.foot{background:#07080b;border-top:1px solid #1d222b}
-body.site .brand{color:#fff}
-body.site .foot a{color:#fff}
-
-/* ================= ULTRAS DODACI ================= */
-body.site{--flare:#ff5a1f;--stencil:'Saira Stencil One','Anton',Impact,sans-serif;--scarf-a:#0b2c74;--scarf-b:#f4f2ec}
-
-/* šal – pletena traka s resama */
-body.site .scarf{position:relative;height:46px;overflow:hidden;background:var(--scarf-a);
-  border-top:3px solid var(--scarf-b);border-bottom:3px solid var(--scarf-b);box-shadow:0 6px 20px rgba(0,0,0,.45)}
-body.site .scarf::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M0 0l4 4 4-4M0 4l4 4 4-4' fill='none' stroke='%23000' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E")}
-body.site .scarf::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(90deg,transparent 0 220px,rgba(255,255,255,.04) 220px 222px),linear-gradient(180deg,rgba(255,255,255,.12),transparent 40%,rgba(0,0,0,.25))}
-body.site .scarf-track{display:flex;width:max-content;animation:scarf 60s linear infinite;height:100%}
-body.site .scarf-track>div{display:flex}
-body.site .scarf-track span{font-family:var(--banner);color:var(--scarf-b);font-size:1.35rem;letter-spacing:.14em;line-height:40px;padding:0 28px;white-space:nowrap;text-transform:uppercase}
-@keyframes scarf{to{transform:translateX(-50%)}}
-
-/* ograda tribine */
-body.site .fence{position:absolute;left:0;right:0;top:0;height:46%;z-index:-1;pointer-events:none;opacity:.10;
-  background:repeating-linear-gradient(45deg,#fff 0 1px,transparent 1px 16px),repeating-linear-gradient(-45deg,#fff 0 1px,transparent 1px 16px);
-  -webkit-mask-image:linear-gradient(180deg,#000,transparent);mask-image:linear-gradient(180deg,#000,transparent)}
-
-/* baklja i dim */
-body.site .flare{position:absolute;left:-8%;bottom:-30%;width:70%;height:90%;z-index:-1;pointer-events:none}
-body.site .flare i{position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(255,120,40,.55),rgba(255,70,20,.22) 45%,transparent 75%);filter:blur(18px);animation:flicker 2.6s ease-in-out infinite}
-body.site .flare i+i{left:40%;top:-20%;width:80%;background:radial-gradient(closest-side,rgba(200,210,230,.16),transparent 70%);filter:blur(30px);animation:smoke 12s ease-in-out infinite}
-@keyframes flicker{0%,100%{opacity:.85;transform:scale(1)}30%{opacity:1;transform:scale(1.04)}55%{opacity:.7;transform:scale(.98)}80%{opacity:.95}}
-@keyframes smoke{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,-8%) scale(1.15)}}
-
-/* grafit / stencil */
-body.site .hero-mark{font-family:var(--stencil);-webkit-text-stroke:0;color:rgba(255,255,255,.06)}
-body.site .tag{position:absolute;right:26px;top:24px;font-family:var(--stencil);font-size:clamp(1.1rem,2.6vw,1.6rem);color:var(--flare);
-  transform:rotate(4deg);text-shadow:0 0 18px rgba(255,90,31,.45);letter-spacing:.06em;opacity:.9}
-body.site .hero h1{text-transform:uppercase}
-
-/* transparent s ušivenim rubom i konopcima */
-body.site .sec-head h2,body.site .card>h2,body.site .banner-strip{position:relative;clip-path:none;border-radius:2px;
-  outline:2px dashed rgba(12,14,18,.28);outline-offset:-7px}
-body.site .sec-head h2::before,body.site .sec-head h2::after,body.site .card>h2::before,body.site .card>h2::after{content:"";position:absolute;top:-10px;width:2px;height:14px;background:#b9b3a3}
-body.site .sec-head h2::before,body.site .card>h2::before{left:10px;transform:rotate(-14deg)}
-body.site .sec-head h2::after,body.site .card>h2::after{right:10px;transform:rotate(14deg)}
-body.site .sec-head h2,body.site .card>h2{padding:8px 20px 6px;font-size:1.9rem;box-shadow:5px 5px 0 var(--accent),0 10px 24px rgba(0,0,0,.35)}
-
-@media (prefers-reduced-motion: reduce){
-  body.site .scarf-track,body.site .flare i{animation:none}
-}
+body.site footer.foot{background:var(--black);border-top:6px solid var(--orange);box-shadow:inset 0 6px 0 var(--blue)}
+body.site footer.foot a{color:#fff}
 @media(max-width:520px){
-  body.site .scarf{height:40px}
-  body.site .scarf-track span{font-size:1.1rem;line-height:34px}
-  body.site .tag{top:auto;bottom:18px;right:16px}
+  body.site .hero{padding:40px 18px 32px}
+  body.site .hero::after{width:22%}
+  body.site .hero h1{font-size:clamp(1.9rem,9.5vw,3rem);overflow-wrap:anywhere}
 }
-@media(max-width:520px){body.site .hero h1{font-size:clamp(1.9rem,9.5vw,3rem);overflow-wrap:anywhere;hyphens:auto}}
+
+/* ===== elementi White Stonesa (šalovi, transparent, grb, tribina) ===== */
+body.site{--orange:#f2661c;--blue:#2438b8;--blue-2:#1565ff}
+body.site .logo-img{mix-blend-mode:screen;height:52px}
+body.site .stripe{height:14px;display:block;background:linear-gradient(180deg,#fff 0 2px,var(--orange) 2px 6px,#fff 6px 8px,var(--blue) 8px 14px)}
+body.site .stripe i{display:none}
+body.site .hero::before{background:linear-gradient(90deg,rgba(8,8,8,.96) 0%,rgba(8,8,8,.78) 50%,rgba(8,8,8,.35) 100%),url("slike/naslovna.jpg") center 30%/cover no-repeat}
+body.site .hero::after{display:none}
+body.site .hero-crest{position:absolute;right:max(18px,calc((100vw - 1120px)/2 + 18px));top:50%;transform:translateY(-50%) rotate(4deg);width:min(30vw,300px);z-index:-1;mix-blend-mode:screen;opacity:.95;filter:drop-shadow(0 10px 30px rgba(0,0,0,.6))}
+body.site .hero h1,body.site .hero .sub,body.site .chips{text-shadow:0 2px 12px rgba(0,0,0,.8)}
+body.site .banner-strip{background:#fff;color:var(--blue);box-shadow:5px 5px 0 var(--orange)}
+
+/* šal ovješen preko stranice */
+body.site .scarf-hang{margin:-8px -6px 30px;position:relative;z-index:2}
+body.site .scarf-hang img{width:100%;height:auto;display:block;transform:rotate(-1deg);filter:drop-shadow(0 14px 24px rgba(0,0,0,.6))}
+body.site .scarf-hang.alt img{transform:rotate(.8deg)}
+body.site .scarf-foot{background:var(--black);padding:26px 0 0;overflow:hidden}
+body.site .scarf-foot img{display:block;width:min(1120px,100%);margin:0 auto -4px;height:auto}
+body.site footer.foot{border-top:0;box-shadow:none;border-top:14px solid transparent;border-image:linear-gradient(180deg,#fff 0 2px,var(--orange) 2px 6px,#fff 6px 8px,var(--blue) 8px 14px) 14}
+
+/* transparent na vrhu podstranica */
+body.site .page-banner{margin:22px 0 22px}
+body.site .page-banner img{width:100%;height:auto;display:block}
+body.site main{padding-top:0}
+
+/* naslovi sekcija u bojama šala */
+body.site .sec-head h2,body.site .card>h2{background:linear-gradient(180deg,var(--orange) 0 4px,#fff 4px 6px,var(--blue) 6px 10px) left bottom/90px 10px no-repeat;padding-bottom:14px}
+body.site .btn.white,body.site .btn.primary{background:var(--orange);color:#fff}
+body.site .standings tr.q .pos span,body.site .qdot{background:var(--blue)}
+body.site .match.is-done{border-left-color:var(--blue)}
+body.site .b-row.win{background:#18205a}
+body.site .stat{border-top:6px solid var(--orange);box-shadow:inset 0 4px 0 #000}
+body.site .grid .stat:nth-child(even){border-top-color:var(--blue)}
+@media(max-width:700px){
+  body.site .hero-crest{width:120px;top:auto;bottom:16px;transform:rotate(4deg);opacity:.85}
+  body.site .scarf-hang{margin:-6px -12px 22px}
+}
+body.site .hero::before{top:0;left:0;right:0;bottom:0;width:auto;height:auto}
+body.site .hero-crest,body.site .logo-img{mix-blend-mode:normal}
+body.site .gal-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+body.site .gal-grid img,body.site .gal-grid img:first-child{grid-column:auto;grid-row:auto;aspect-ratio:4/3;height:auto}
+@media(max-width:700px){body.site .hero-crest{display:none}}
+@media(max-width:520px){body.site .hero h1{font-size:clamp(1.7rem,8.6vw,2.8rem);overflow-wrap:break-word}}
+body.site .scarf-hang.ws{margin:22px 0 30px}
+body.site .scarf-hang.ws img{transform:none;filter:drop-shadow(0 10px 20px rgba(0,0,0,.6))}
