@@ -469,3 +469,5 @@ body.app .settings h3{font-family:var(--banner);font-weight:400;text-transform:u
 body.app .notice{background:#e8ebf7;color:#1b2a7a;border-left:4px solid var(--blue);border-radius:4px}
 body.app .notice.warn{background:#fff1e6;color:#7a3a0c;border-left-color:var(--orange)}
 body.app .mode-pill{background:#1f1f1f;border-color:#333}
+body.site .scarf-foot{padding:30px 0 0}
+body.site .scarf-foot img{width:100%;max-width:none;margin:0 0 -4px}

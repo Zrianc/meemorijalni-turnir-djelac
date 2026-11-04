@@ -32,7 +32,7 @@
     prizes: '',
     news: '',
     about: 'Anđelko Herjavec – Đelac (1958. – 2001.) počeo je kao radnik u varaždinskom Varteksu, a postao direktor tvornice i predsjednik nogometnog kluba. Pod njegovim vodstvom Varteks je proživio svoje najveće europske utakmice, a navijači stadion i danas zovu njegovim imenom.\n\nOvaj turnir igramo u njegovu čast – uz navijačku podršku White Stonesa.',
-    rules: 'Igra se 4 + 1 (četiri igrača u polju i vratar), uz leteće izmjene.\nEkipa u prijavi može imati najviše 10 igrača; igrač smije nastupati samo za jednu ekipu.\nPobjeda nosi 3 boda, neriješeno 1, poraz 0.\nKod jednakog broja bodova u skupini odlučuju: međusobni susret, gol-razlika, više postignutih golova.\nU eliminacijama se kod neriješenog rezultata izvode kazneni udarci.\nEkipa koja ne dođe na utakmicu u roku od 5 minuta gubi 3 : 0 bez borbe.\nOdluke sudaca su konačne. Organizator zadržava pravo izmjene rasporeda.',
+    rules: 'Igra se po službenim FIFA pravilima futsala (izdanje 2025./26.), uz prilagodbe turnira navedene u ovim pravilima.\nEkipa igra s vratarom i 4 igrača u polju. Utakmica ne može početi ni nastaviti se ako ekipa ima manje od 3 igrača.\nIzmjene su neograničene i leteće, bez prekida igre, ali samo u zoni za izmjene: igrač mora izaći s terena prije nego što zamjena uđe.\nNema zaleđa.\nKad lopta izađe preko uzdužne linije, igra se nastavlja ubacivanjem nogom (lopta mirna na liniji). Gol se ne može postići izravno iz ubacivanja.\nPravilo 4 sekunde: ubacivanje, kut, slobodni udarac i izbacivanje vratara moraju se izvesti unutar 4 sekunde, inače lopta pripada protivniku. Protivnici moraju biti udaljeni najmanje 5 metara.\nVratar loptu smije uhvatiti rukama samo u svom kaznenom prostoru, a iz igre je izbacuje rukom. Na svojoj polovici smije kontrolirati loptu najviše 4 sekunde.\nKad suigrač namjerno vrati loptu vrataru, vratar je na svojoj polovici ne smije ponovno dodirnuti dok je ne dotakne protivnik.\nKazneni udarac izvodi se sa 6 metara.\nAkumulirani prekršaji: zbrajaju se svi prekršaji kažnjeni izravnim slobodnim udarcem, posebno za svako poluvrijeme. Od 6. prekršaja nadalje protivnik izvodi izravni slobodni udarac bez živog zida s oznake na 10 metara. Ako je prekršaj napravljen bliže golu, ekipa bira između 10 metara i mjesta prekršaja.\nSvaka ekipa ima pravo na jedan time-out od 1 minute po poluvremenu, samo dok je u posjedu lopte.\nDva žuta kartona znače crveni. Nakon crvenog kartona ekipa igra s igračem manje 2 minute ili dok ne primi gol, a zatim može uvesti zamjenu.\nPravilo turnira: isključeni igrač ne smije igrati sljedeću utakmicu turnira. Klizeći startovi prema protivniku nisu dopušteni.\nIgra se u tenisicama za dvoranu ili travu; kopačke s čepovima nisu dopuštene. Štitnici za potkoljenicu su obavezni.\nPobjeda nosi 3 boda, neriješeno 1, poraz 0. Kod jednakog broja bodova u skupini odlučuju: međusobni susret, gol-razlika, više postignutih golova.\nU eliminacijama se kod neriješenog rezultata izvode kazneni udarci sa 6 metara, po 3 za svaku ekipu, a zatim naizmjence do odluke.\nEkipa koja ne dođe na utakmicu u roku od 5 minuta od zakazanog termina gubi 3 : 0 bez borbe.\nOdluke sudaca su konačne. Organizator zadržava pravo izmjene rasporeda.',
     format: 'groups_ko',      // groups_ko | ko | league
     groupsCount: 4,
     advance: 2,
@@ -49,6 +49,7 @@
     registrationOpen: true,
     scarfText: 'WHITE STONES ✦ MEMORIJAL ĐELAC ✦ VARAŽDIN'
   };
+  const FUTSAL_RULES = DEFAULT_SETTINGS.rules;
   const NUM_KEYS = ['groupsCount', 'advance', 'matchMinutes', 'breakMinutes', 'koBreak', 'fields', 'maxTeams', 'minPlayers', 'maxPlayers'];
   const BOOL_KEYS = ['doubleRound', 'thirdPlace', 'registrationOpen'];
 
@@ -611,7 +612,7 @@
 
   window.T = {
     $, $$, esc, uid, isNum, clone, shuffle, rnd, toMin, fmtMin, hue, initials, nameKey,
-    DEFAULT_SETTINGS, NUM_KEYS, BOOL_KEYS, normT, LIVE, API, Demo, S,
+    DEFAULT_SETTINGS, FUTSAL_RULES, NUM_KEYS, BOOL_KEYS, normT, LIVE, API, Demo, S,
     teamById, teamName, approvedTeams, groupByKey, groupLabel, findMatch,
     validateDraw, doDraw, scheduleAll, standings, groupComplete, groupMatches, resolve, winnerOf, loserOf, srcLabel,
     champion, topScorers, formatText, fmtDate,

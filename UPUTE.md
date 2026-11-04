@@ -65,8 +65,7 @@ Mapu `slike` prenesi na GitHub zajedno s ostalim datotekama (na GitHubu: **Add f
 |---|---|
 | `logo.png` | grb u zaglavlju i na naslovnici |
 | `naslovna.jpg` | fotografija tribine iza naslova |
-| `sal-grad.jpg` | šal sa zidinama, iznad „O memorijalu” |
-| `sal-1990.jpg` | šal iznad podnožja na svim stranicama |
+| `sal-kraj.png` | šal „1990” sa stršljenima na dnu svih stranica |
 | `transparent.jpg` | transparent ispod naslovnice i na vrhu podstranica |
 | `galerija-1.jpg` … `galerija-8.jpg` | galerija „S tribine” |
 

@@ -375,7 +375,8 @@
       ${area('prizes', 'Nagrade', '', 2)}
       ${area('news', 'Obavijest na vrhu stranice', 'Npr. „Kasnimo 15 minuta” – ostavi prazno da se ne prikazuje.', 2)}
       ${area('about', 'O memorijalu', '', 5)}
-      ${area('rules', 'Pravila', 'Svako pravilo u svom retku.', 7)}
+      ${area('rules', 'Pravila', 'Svako pravilo u svom retku.', 12)}
+      <button type="button" class="btn ghost sm" id="load-futsal" style="margin:-6px 0 14px">Učitaj službena pravila futsala</button>
 
       <h3>Format natjecanja</h3>
       ${drawn ? '<div class="notice warn">Ždrijeb je već obavljen – promjena formata vrijedi tek kad ponoviš ždrijeb.</div>' : ''}
@@ -481,6 +482,13 @@
     'demo-reset': async () => { if (!(await confirmBox('Obrisati demo podatke?', 'Brišu se sve ekipe, ždrijeb i rezultati iz ovog preglednika.', 'Obriši', true))) return; T.Demo.reset(); await T.refresh(); render(); }
   };
 
+  document.addEventListener('click', async e => {
+    if (e.target.id === 'load-futsal') {
+      const ta = $('#s-rules'); if (!ta) return;
+      if (ta.value.trim() && ta.value.trim() !== T.FUTSAL_RULES && !(await confirmBox('Zamijeniti pravila?', 'Trenutni tekst pravila zamijenit će se službenim pravilima futsala. Promjena vrijedi tek kad klikneš Spremi postavke.', 'Zamijeni'))) return;
+      ta.value = T.FUTSAL_RULES; toast('Pravila učitana – klikni Spremi postavke'); return;
+    }
+  });
   document.addEventListener('click', e => {
     const tf = e.target.closest('[data-tf]'); if (tf) { UI.teamFilter = tf.dataset.tf; render(); return; }
     const mf = e.target.closest('[data-mf]'); if (mf) { UI.matchFilter = mf.dataset.mf; render(); return; }
