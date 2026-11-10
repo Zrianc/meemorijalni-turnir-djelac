@@ -574,3 +574,12 @@ body.app .eur span{position:absolute;right:12px;top:50%;transform:translateY(-50
 @media(max-width:520px){body.app .price-grid{grid-template-columns:1fr}}
 body.app .eur input::-webkit-outer-spin-button,body.app .eur input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 body.app .eur input{-moz-appearance:textfield;appearance:textfield}
+@media(max-width:760px){
+  body.site .bottom-nav,body.has-bnav .bottom-nav{display:flex !important}
+  body:not(.has-bnav):not(.site) .bottom-nav{display:none !important}
+}
+body.site .tier-price{display:flex;flex-direction:column;gap:2px;padding:10px 0 12px;border-bottom:1px solid #2a2a2a;margin-bottom:4px;
+  font-family:var(--banner);font-weight:400;font-size:2.2rem;line-height:1;color:#fff;letter-spacing:.01em}
+body.site .tier-price small{font-family:var(--body);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--c)}
+body.site .tier-price.tbd{font-size:1.35rem;color:#cfcfcf}
+body.site .sponsor-cta p b{color:#fff}

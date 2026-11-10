@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=202611101752">
 <link rel="manifest" href="manifest.json">
 </head>
 <body class="site">
@@ -38,11 +38,11 @@
 </div></footer>
 <div id="modal-root"></div>
 <div id="toast"></div>
-<nav class="bottom-nav" id="bnav" aria-label="Izbornik"></nav>
+<nav class="bottom-nav" id="bnav" aria-label="Izbornik" style="display:none"></nav>
 <div class="more-sheet" id="more" hidden></div>
 
-<script src="config.js"></script>
-<script src="core.js"></script>
+<script src="config.js?v=202611101752"></script>
+<script src="core.js?v=202611101752"></script>
 <script>
 (function () {
   'use strict';
@@ -82,7 +82,7 @@
       ball: '<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>',
       more: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'
     };
-    const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${I[k]}</svg>`;
+    const svg = k => `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
     const third = st.format === 'league' ? ['strijelci', 'Strijelci', 'ball'] : ['eliminacije', 'Kostur', 'cup'];
     const main = [['pocetna', 'Početna', 'home'], ['raspored', 'Raspored', 'cal'], ['skupine', st.format === 'league' ? 'Ljestvica' : (st.format === 'ko' ? 'Ždrijeb' : 'Tablice'), 'table'], third];
     const mainKeys = main.map(x => x[0]);
@@ -169,7 +169,7 @@
       <div class="card info"><h3>📞 Kontakt</h3><p>${esc(st.contact || 'Bit će objavljeno.')}</p></div>
     </section>
 
-    <section class="section"><div class="card sponsor-cta"><div><h3>🤝 Postani sponzor memorijala</h3><p>Podržite turnir u spomen na Đelca – novcem, nagradama, opremom ili okrjepom za ekipe.</p></div>
+    <section class="section"><div class="card sponsor-cta"><div><h3>🤝 Postani sponzor memorijala</h3><p>Podržite turnir u spomen na Đelca – paketi ${['Bronze', 'Silver', 'Gold'].map(n => `<b>${n}</b> ${esc(T.fmtPrice(st['tier' + n + 'Price']))}`).join(' · ')}.</p></div>
       <a class="btn primary lg" href="#sponzori">Postani sponzor</a></div></section>
 
     <section class="section grid g2">
@@ -329,7 +329,7 @@
             const perks = String(st[k + 'Perks'] || '').split('\n').map(x => x.trim()).filter(Boolean);
             return `<label class="tier tier-${n.toLowerCase()}"><input type="radio" name="type" value="${n}" required>
               <span class="tier-top"><span class="tier-ic">${ic}</span><b>${n}</b></span>
-              <span class="tier-price">${esc(T.fmtPrice(st[k + 'Price']))}</span>
+              <span class="tier-price ${String(st[k + 'Price'] || '').trim() ? '' : 'tbd'}"><small>Cijena paketa</small>${esc(T.fmtPrice(st[k + 'Price']))}</span>
               <ul>${perks.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
               <span class="tier-pick"><span class="p-off">Odaberi</span><span class="p-on">✓ Odabrano</span></span></label>`; }).join('')}
         </div>

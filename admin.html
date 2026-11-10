@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=202611101752">
 <style>
   .adm-team{display:flex;flex-direction:column;gap:10px}
   .adm-team .th{display:flex;gap:12px;align-items:center}
@@ -64,11 +64,11 @@
 <main><div class="wrap" id="app"><div class="loading"><div class="spinner"></div>Učitavam…</div></div></main>
 <div id="modal-root"></div>
 <div id="toast"></div>
-<nav class="bottom-nav" id="bnav" aria-label="Izbornik"></nav>
+<nav class="bottom-nav" id="bnav" aria-label="Izbornik" style="display:none"></nav>
 <div class="more-sheet" id="more" hidden></div>
 
-<script src="config.js"></script>
-<script src="core.js"></script>
+<script src="config.js?v=202611101752"></script>
+<script src="core.js?v=202611101752"></script>
 <script>
 (function () {
   'use strict';
@@ -94,7 +94,7 @@
       postavke: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
       odjava: '<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>'
     };
-    const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${I[k]}</svg>`;
+    const svg = k => `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
     const short = { ekipe: 'Ekipe', zdrijeb: 'Ždrijeb', utakmice: 'Utakmice', postavke: 'Postavke' };
     const pend = S.teams.filter(x => x.status === 'pending').length, liv = S.t.matches.filter(m => m.status === 'live').length;
     $('#bnav').innerHTML = S.isAdmin ? TABS.map(([k]) => `<a href="#${k}" class="${k === cur ? 'on' : ''}">${svg(k)}<span>${short[k]}</span>${k === 'ekipe' && pend ? `<em>${pend}</em>` : ''}${k === 'utakmice' && liv ? `<em class="lv">${liv}</em>` : ''}</a>`).join('') +
