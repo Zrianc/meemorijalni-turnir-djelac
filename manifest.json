@@ -1,0 +1,9 @@
+{
+  "name": "Memorijal „Đelac” – malonogometni turnir",
+  "short_name": "Memorijal Đelac",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [{ "src": "slike/logo.png", "sizes": "447x447", "type": "image/png", "purpose": "any" }]
+}

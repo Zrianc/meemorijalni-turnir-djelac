@@ -73,6 +73,14 @@ Sliku zamijeniš tako da preneseš novu pod istim imenom. Za galeriju dodaj `gal
 
 Boje mijenjaš na dnu `style.css` (`--orange`, `--blue`).
 
+## Forma „Postani sponzor”
+
+Upiti sponzora šalju se na e-mail iz Postavki (zadano `memorijal.djelac@gmail.com`) preko besplatne usluge FormSubmit.
+
+**Jednokratna aktivacija:** kad netko prvi put pošalje formu (najbolje ti sam, probno), FormSubmit na taj e-mail pošalje poruku „Action required: Activate FormSubmit”. Otvori je i klikni **Activate Form**. Tek nakon toga upiti stižu u inbox. Provjeri i mapu Neželjena pošta.
+
+Na upit odgovaraš običnim „Odgovori” – odgovor ide izravno sponzoru.
+
 ## Napomene
 
 - Besplatni Supabase projekt **pauzira se nakon 7 dana bez aktivnosti**. Ako je stranica dugo mirovala, prijavi se na supabase.com i klikni *Restore*. Tijekom prijava i turnira to nije problem.

@@ -2,10 +2,14 @@
 <html lang="hr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Aplikacija za organizatore – Memorijal „Đelac”</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#0a2a66">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="apple-touch-icon" href="slike/logo.png">
+<link rel="icon" href="slike/logo.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -60,6 +64,8 @@
 <main><div class="wrap" id="app"><div class="loading"><div class="spinner"></div>Učitavam…</div></div></main>
 <div id="modal-root"></div>
 <div id="toast"></div>
+<nav class="bottom-nav" id="bnav" aria-label="Izbornik"></nav>
+<div class="more-sheet" id="more" hidden></div>
 
 <script src="config.js"></script>
 <script src="core.js"></script>
@@ -81,6 +87,19 @@
       return `<a href="#${k}" class="${k === cur ? 'on' : ''}">${l}${c}</a>`;
     }).join('') + '<button data-action="logout">Odjava</button>' : '';
     $('#mode-pill').hidden = T.LIVE;
+    const I = {
+      ekipe: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3 3 0 0 1 0 6M18 14c2 .7 3 2.8 3 6"/>',
+      zdrijeb: '<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.3"/><circle cx="15" cy="15" r="1.3"/><circle cx="15" cy="9" r="1.3"/><circle cx="9" cy="15" r="1.3"/>',
+      utakmice: '<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>',
+      postavke: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+      odjava: '<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>'
+    };
+    const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${I[k]}</svg>`;
+    const short = { ekipe: 'Ekipe', zdrijeb: 'Ždrijeb', utakmice: 'Utakmice', postavke: 'Postavke' };
+    const pend = S.teams.filter(x => x.status === 'pending').length, liv = S.t.matches.filter(m => m.status === 'live').length;
+    $('#bnav').innerHTML = S.isAdmin ? TABS.map(([k]) => `<a href="#${k}" class="${k === cur ? 'on' : ''}">${svg(k)}<span>${short[k]}</span>${k === 'ekipe' && pend ? `<em>${pend}</em>` : ''}${k === 'utakmice' && liv ? `<em class="lv">${liv}</em>` : ''}</a>`).join('') +
+      `<button type="button" data-action="logout">${svg('odjava')}<span>Odjava</span></button>` : '';
+    document.body.classList.toggle('has-bnav', !!S.isAdmin);
     $('#brand-sub').textContent = S.t.settings.name;
   }
 
@@ -373,8 +392,17 @@
       <div class="row2">${txt('location', 'Mjesto', 'npr. Varaždin')}${txt('venue', 'Igralište / dvorana', 'npr. Sportska dvorana …')}</div>
       <div class="row2">${txt('fee', 'Kotizacija', 'npr. 50 € po ekipi')}${txt('contact', 'Kontakt', 'npr. Ivan, 091 234 5678')}</div>
       ${area('prizes', 'Nagrade', '', 2)}
+      <h3>Sponzori</h3>
+      ${txt('sponsorEmail', 'E-mail na koji stižu upiti sponzora', 'memorijal.djelac@gmail.com', 'email')}
+      <div class="lbl" style="margin:6px 0 8px">Cijene paketa</div>
+      <div class="price-grid">${[['Bronze', 'tierBronze', '🥉'], ['Silver', 'tierSilver', '🥈'], ['Gold', 'tierGold', '🥇']].map(([n, k, ic]) => `<div class="field price-f"><label for="s-${k}Price">${ic} ${n}</label>
+        <div class="eur"><input id="s-${k}Price" name="${k}Price" type="number" min="0" step="10" inputmode="numeric" value="${esc(s[k + 'Price'])}" placeholder="po dogovoru"><span>€</span></div></div>`).join('')}</div>
+      <p class="hint" style="margin:-6px 0 14px;font-size:.85rem;color:var(--muted)">Ostavi prazno ako je iznos po dogovoru.</p>
+      ${[['Bronze', 'tierBronze'], ['Silver', 'tierSilver'], ['Gold', 'tierGold']].map(([n, k]) => area(k + 'Perks', 'Paket ' + n + ' – što sponzor dobiva', 'Svaka stavka u svom retku.', 3)).join('')}
+      ${area('sponsorText', 'Tekst na stranici „Postani sponzor”', '', 5)}
       ${area('news', 'Obavijest na vrhu stranice', 'Npr. „Kasnimo 15 minuta” – ostavi prazno da se ne prikazuje.', 2)}
-      ${area('about', 'O memorijalu', '', 5)}
+      ${area('about', 'O memorijalu', 'Prazan red između odlomaka.', 12)}
+      <button type="button" class="btn ghost sm" id="load-djelac" style="margin:-6px 0 14px">Učitaj novi tekst o Đelcu</button>
       ${area('rules', 'Pravila', 'Svako pravilo u svom retku.', 12)}
       <button type="button" class="btn ghost sm" id="load-futsal" style="margin:-6px 0 14px">Učitaj službena pravila futsala</button>
 
@@ -483,6 +511,11 @@
   };
 
   document.addEventListener('click', async e => {
+    if (e.target.id === 'load-djelac') {
+      const ta = $('#s-about'); if (!ta) return;
+      if (ta.value.trim() && ta.value.trim() !== T.DJELAC_TEXT && !(await confirmBox('Zamijeniti tekst?', 'Trenutni tekst „O memorijalu” zamijenit će se novim tekstom o Đelcu. Promjena vrijedi tek kad klikneš Spremi postavke.', 'Zamijeni'))) return;
+      ta.value = T.DJELAC_TEXT; toast('Tekst učitan – klikni Spremi postavke'); return;
+    }
     if (e.target.id === 'load-futsal') {
       const ta = $('#s-rules'); if (!ta) return;
       if (ta.value.trim() && ta.value.trim() !== T.FUTSAL_RULES && !(await confirmBox('Zamijeniti pravila?', 'Trenutni tekst pravila zamijenit će se službenim pravilima futsala. Promjena vrijedi tek kad klikneš Spremi postavke.', 'Zamijeni'))) return;

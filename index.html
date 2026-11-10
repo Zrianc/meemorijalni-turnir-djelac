@@ -2,14 +2,19 @@
 <html lang="hr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Memorijal „Đelac” – malonogometni turnir</title>
 <meta name="description" content="Memorijalni malonogometni turnir u spomen na Anđelka Herjavca – Đelca. Prijava ekipa, ždrijeb, raspored, rezultati i tablice.">
-<meta name="theme-color" content="#0a2a66">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="apple-touch-icon" href="slike/logo.png">
+<link rel="icon" href="slike/logo.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
 </head>
 <body class="site">
 <header class="top">
@@ -33,6 +38,8 @@
 </div></footer>
 <div id="modal-root"></div>
 <div id="toast"></div>
+<nav class="bottom-nav" id="bnav" aria-label="Izbornik"></nav>
+<div class="more-sheet" id="more" hidden></div>
 
 <script src="config.js"></script>
 <script src="core.js"></script>
@@ -43,7 +50,7 @@
 
   const ROUTES = [
     ['pocetna', 'Početna'], ['prijava', 'Prijava ekipe'], ['ekipe', 'Ekipe'], ['skupine', 'Ždrijeb i tablice'],
-    ['raspored', 'Raspored i rezultati'], ['eliminacije', 'Eliminacije'], ['strijelci', 'Strijelci']
+    ['raspored', 'Raspored i rezultati'], ['eliminacije', 'Eliminacije'], ['strijelci', 'Strijelci'], ['pravila', 'Pravila'], ['sponzori', 'Postani sponzor']
   ];
   const UI = { stage: 'all', team: '', regDone: false };
 
@@ -67,6 +74,22 @@
     $('#brand-sub').textContent = [T.fmtDate(st.date, { day: 'numeric', month: 'long', year: 'numeric' }), st.location].filter(Boolean).join(' · ') || 'Malonogometni turnir';
     $('#foot-org').textContent = st.organizer ? 'Organizator: ' + st.organizer : st.name;
     $('#mode-pill').hidden = T.LIVE;
+    const I = {
+      home: '<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/>',
+      cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      table: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 10v10"/>',
+      cup: '<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4v2a3 3 0 0 0 4 3M16 6h4v2a3 3 0 0 1-4 3M12 13v4M8 21h8M10 17h4"/>',
+      ball: '<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>',
+      more: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'
+    };
+    const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${I[k]}</svg>`;
+    const third = st.format === 'league' ? ['strijelci', 'Strijelci', 'ball'] : ['eliminacije', 'Kostur', 'cup'];
+    const main = [['pocetna', 'Početna', 'home'], ['raspored', 'Raspored', 'cal'], ['skupine', st.format === 'league' ? 'Ljestvica' : (st.format === 'ko' ? 'Ždrijeb' : 'Tablice'), 'table'], third];
+    const mainKeys = main.map(x => x[0]);
+    const extra = visibleRoutes().filter(([k]) => !mainKeys.includes(k));
+    $('#bnav').innerHTML = main.map(([k, l, ic]) => `<a href="#${k}" class="${k === cur ? 'on' : ''}">${svg(ic)}<span>${l}</span></a>`).join('') +
+      `<button type="button" id="more-btn" class="${extra.some(([k]) => k === cur) ? 'on' : ''}" aria-expanded="false">${svg('more')}<span>Više</span></button>`;
+    $('#more').innerHTML = `<div class="sheet">${extra.map(([k, l]) => `<a href="#${k}" class="${k === cur ? 'on' : ''}">${l}</a>`).join('')}<a href="admin.html">Ulaz za organizatore</a></div>`;
     document.title = st.name;
     const sc = String(st.scarfText || '').trim();
     const sEl = $('#scarf');
@@ -80,9 +103,10 @@
     if (S.error && !S.loaded) { app.innerHTML = `<div class="notice err">${esc(S.error)}</div>`; return; }
     if (!S.loaded) return;
     const r = current();
-    const views = { pocetna: vHome, prijava: vRegister, ekipe: vTeams, skupine: vGroups, raspored: vSchedule, eliminacije: vBracket, strijelci: vScorers };
+    const views = { pocetna: vHome, prijava: vRegister, ekipe: vTeams, skupine: vGroups, raspored: vSchedule, eliminacije: vBracket, strijelci: vScorers, pravila: vRules, sponzori: vSponsor };
     app.innerHTML = (r !== 'pocetna' ? '<div class="page-banner"><img src="slike/transparent.jpg" alt="White Stones" onerror="this.parentNode.remove()"></div>' : '') + (T.LIVE ? '' : `<div class="notice warn"><b>Demo način.</b> Podaci se spremaju samo u ovom pregledniku. Kad se poveže baza (config.js), stranica postaje javna za sve.</div>`) + views[r]();
     if (r === 'prijava') mountRegister();
+    if (r === 'sponzori') mountSponsor();
     tick();
   }
 
@@ -145,10 +169,14 @@
       <div class="card info"><h3>📞 Kontakt</h3><p>${esc(st.contact || 'Bit će objavljeno.')}</p></div>
     </section>
 
+    <section class="section"><div class="card sponsor-cta"><div><h3>🤝 Postani sponzor memorijala</h3><p>Podržite turnir u spomen na Đelca – novcem, nagradama, opremom ili okrjepom za ekipe.</p></div>
+      <a class="btn primary lg" href="#sponzori">Postani sponzor</a></div></section>
+
     <section class="section grid g2">
       <div class="card"><h2>O memorijalu</h2><div class="prose">${esc(st.about)}</div></div>
-      <div class="card"><h2>Pravila</h2>${rules.length ? `<ul class="rules">${rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : '<p>Pravila će biti objavljena.</p>'}
-        <p class="lead" style="margin-top:12px">Utakmica traje ${st.matchMinutes} min.</p></div>
+      <div class="card"><h2>Pravila turnira</h2>${rules.length ? `<ul class="rules">${rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : '<p>Pravila će biti objavljena.</p>'}
+        <p class="lead" style="margin-top:12px">Utakmica traje ${st.matchMinutes} min.</p>
+        <a class="btn ghost" href="#pravila" style="margin-top:6px">Službena pravila futsala →</a></div>
     </section>`;
   }
   const byTime = (a, b) => (a.time || '').localeCompare(b.time || '') || (a.field - b.field) || (a.seq - b.seq);
@@ -163,6 +191,192 @@
     el.innerHTML = [[D, 'dana'], [H, 'sati'], [M, 'min'], [Sx, 'sek']].map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
   }
   setInterval(tick, 1000);
+
+
+  const LAWS = [
+    ['Teren', [
+      'Dimenzije: uzdužna linija 25–42 m, poprečna (gol-linija) 16–25 m. Na međunarodnim utakmicama 38–42 × 20–25 m. Uzdužna linija uvijek je dulja od poprečne.',
+      'Sve linije široke su 8 cm i pripadaju površini koju omeđuju. Središnji krug ima polumjer 3 m.',
+      'Kazneni prostor: od svake vratnice crta duga 6 m, zatim četvrtine kruga polumjera 6 m spojene ravnom crtom od 3,16 m usporednom s gol-linijom.',
+      'Oznaka za kazneni udarac je na 6 m od sredine gola. Druga oznaka je na 10 m – s nje se izvode izravni slobodni udarci od 6. akumuliranog prekršaja.',
+      'Zone za izmjene nalaze se ispred klupa, na uzdužnoj liniji: počinju 5 m od središnje crte i duge su 5 m.',
+      'Gol: 3 m širine i 2 m visine (unutarnja mjera), vratnice i prečka široke 8 cm. Gol ne smije biti pričvršćen za pod, ali mora biti stabilan.'
+    ]],
+    ['Lopta', [
+      'Opseg 62–64 cm, masa 400–440 g na početku utakmice, tlak 0,6–0,9 atm.',
+      'Lopta slabo odskače: pri ispuštanju s 2 m prvi odskok mora biti između 50 i 65 cm.',
+      'Ako se lopta ošteti tijekom igre, igra se nastavlja spuštenom loptom. Gol vrijedi ako se lopta oštetila nakon udarca u vratnicu ili prečku i zatim ušla u gol.'
+    ]],
+    ['Igrači', [
+      'Svaka ekipa ima najviše 5 igrača na terenu, od kojih je jedan vratar. Utakmica ne može početi ni nastaviti se ako neka ekipa ima manje od 3 igrača.',
+      'Broj zamjena određuju propozicije natjecanja (na službenim natjecanjima najviše 9).',
+      'Izmjene su neograničene i mogu se raditi bilo kada osim tijekom time-outa, i bez prekida igre. Igrač izlazi kroz zonu za izmjene svoje ekipe, a zamjena ulazi kroz istu zonu tek kad je igrač izašao.',
+      'Vratar se smije zamijeniti s igračem iz polja, ali samo u prekidu igre i uz prethodnu obavijest sucu.',
+      'Pravilo 2 minute: nakon isključenja ekipa igra s igračem manje 2 minute. Ako u tom vremenu primi gol, može odmah uvesti igrača (kad igra s manje igrača od protivnika). Ako obje ekipe igraju s istim brojem igrača i padne gol, broj igrača se ne mijenja.'
+    ]],
+    ['Oprema igrača', [
+      'Obavezno: majica s rukavima, kratke hlače, čarape, štitnici za potkoljenice i obuća.',
+      'Zabranjen je sav nakit i sve što može ozlijediti igrača. Vratar nosi boju različitu od ostalih igrača i sudaca.',
+      'Kapetan nosi kapetansku traku. Igrači na klupi nose markere drugačije boje od dresova obiju ekipa.'
+    ]],
+    ['Suci', [
+      'Utakmicu vode sudac i drugi sudac, koji se kreću uz suprotne uzdužne linije. Kod neslaganja odlučuje sudac.',
+      'Mogu biti postavljeni i treći sudac te mjeritelj vremena, koji vode evidenciju akumuliranih prekršaja, time-outa i vremena.',
+      'Odluke sudaca o činjenicama vezanim uz igru su konačne.'
+    ]],
+    ['Trajanje utakmice', [
+      'Službeno: dva poluvremena po 20 minuta čistog vremena – sat se zaustavlja kad je lopta izvan igre. Odmor između poluvremena traje najviše 15 minuta.',
+      'Svaka ekipa ima pravo na jedan time-out od 1 minute u svakom poluvremenu. Traži ga trener, a odobrava se kad je ekipa u posjedu lopte. Neiskorišteni time-out ne prenosi se u drugo poluvrijeme.',
+      'Ako su potrebni produžeci, igraju se dva poluvremena po 5 minuta, bez odmora i bez time-outa.',
+      'Na ovom turniru trajanje utakmice određuje organizator (vidi raspored).'
+    ]],
+    ['Početni udarac i spuštena lopta', [
+      'Početni udarac izvodi se sa središnje oznake. Svi igrači moraju biti na svojoj polovici, a protivnici najmanje 3 m od lopte. Lopta je u igri kad je udarena i jasno se pomakne.',
+      'Iz početnog udarca može se izravno postići gol protivniku. Ako lopta izravno uđe u vlastiti gol, dosuđuje se udarac iz kuta protivniku.',
+      'Kod spuštene lopte ostali igrači moraju biti najmanje 2 m udaljeni dok lopta ne dotakne pod.'
+    ]],
+    ['Lopta u igri i izvan igre', [
+      'Lopta je izvan igre kad cijelim obujmom prijeđe gol-liniju ili uzdužnu liniju, po zemlji ili u zraku, ili kad sudac prekine igru.',
+      'Ako lopta udari u strop, igra se nastavlja ubacivanjem za protivnika ekipe koja ju je zadnja dotaknula, s najbližeg mjesta na uzdužnoj liniji.'
+    ]],
+    ['Postizanje gola i pobjednik', [
+      'Gol je postignut kad cijela lopta prijeđe gol-crtu između vratnica i ispod prečke, ako ekipa koja je zabila nije napravila prekršaj.',
+      'Vratar ne može izravno postići gol bacanjem lopte rukom – tada slijedi izbacivanje za protivnika.',
+      'Pobjeđuje ekipa s više postignutih golova. Ako utakmica mora imati pobjednika, igraju se produžeci i/ili izvode kazneni udarci, prema propozicijama.'
+    ]],
+    ['Zaleđe', [
+      'U futsalu nema zaleđa.'
+    ]],
+    ['Prekršaji i nesportsko ponašanje', [
+      'Izravni slobodni udarac dosuđuje se ako igrač nepažljivo, bezobzirno ili prekomjernom silom napadne, skoči na, udari ili pokuša udariti nogom, gurne, udari, startom oduzme loptu ili sapleće protivnika.',
+      'Izravni slobodni udarac dosuđuje se i za držanje, ometanje protivnika uz kontakt, igranje rukom, ugriz ili pljuvanje te bacanje predmeta na loptu, protivnika ili suca.',
+      'Neizravni slobodni udarac dosuđuje se za opasnu igru, ometanje protivnika bez kontakta, prigovaranje te sprječavanje vratara da ispusti loptu iz ruku.',
+      'Nepažljiv prekršaj nema kartona, bezobziran donosi žuti, a prekršaj prekomjernom silom crveni karton.',
+      'Vratar na svojoj polovici smije kontrolirati loptu najviše 4 sekunde. Nakon što odigra loptu, ne smije je ponovno dodirnuti na svojoj polovici ako mu je suigrač namjerno vrati, osim ako je u međuvremenu nije dotaknuo protivnik. Za oboje se dosuđuje neizravni slobodni udarac.',
+      'Vratar ne smije rukama uhvatiti loptu koju mu je suigrač namjerno dodao. Protivnik ne smije napadati vratara dok drži loptu u rukama.',
+      'Žuti karton: odgađanje nastavka igre, prigovaranje, ulazak ili izlazak bez dopuštenja (i nepravilna izmjena), nepoštivanje udaljenosti kod nastavka igre, ponavljanje prekršaja i nesportsko ponašanje.',
+      'Crveni karton: ozbiljno grubi prekršaj, nasilno ponašanje, ugriz ili pljuvanje, sprječavanje gola ili očite prilike za gol igranjem rukom ili prekršajem, uvredljive riječi ili geste te drugi žuti karton na istoj utakmici.'
+    ]],
+    ['Slobodni udarci i akumulirani prekršaji', [
+      'Slobodni udarac može biti izravan (gol vrijedi) ili neizravan (sudac podiže ruku; lopta mora dotaknuti još jednog igrača prije gola).',
+      'Svi slobodni udarci izvode se unutar 4 sekunde, s mirnom loptom. Protivnici moraju biti najmanje 5 m od lopte, a kod udarca iz protivničkog kaznenog prostora izvan tog prostora. Napadači moraju biti najmanje 1 m od živog zida.',
+      'Akumulirani prekršaji su svi prekršaji kažnjeni izravnim slobodnim udarcem. Broje se za svaku ekipu posebno u svakom poluvremenu, a u produžecima se nastavlja brojanje iz drugog poluvremena.',
+      'Od 6. akumuliranog prekršaja nadalje protivnik izvodi izravni slobodni udarac bez živog zida s oznake na 10 m. Ako je prekršaj napravljen između gol-linije i crte na 10 m, ekipa bira između 10 m i mjesta prekršaja. Ako je napravljen u kaznenom prostoru, dosuđuje se kazneni udarac.',
+      'Kod tog udarca izvođač mora pucati na gol s namjerom da zabije. Vratar mora biti najmanje 5 m od lopte, a ostali igrači iza lopte, najmanje 5 m od nje i izvan kaznenog prostora.',
+      'Nakon 5. akumuliranog prekršaja ekipe sudac više ne primjenjuje prednost za njezine prekršaje.'
+    ]],
+    ['Kazneni udarac', [
+      'Izvodi se s oznake na 6 m. Branjeni vratar stoji na gol-crti između vratnica, licem prema izvođaču, dok lopta ne bude udarena.',
+      'Ostali igrači su na terenu, izvan kaznenog prostora, iza oznake za kazneni udarac i najmanje 5 m od nje.'
+    ]],
+    ['Ubacivanje', [
+      'Kad lopta prijeđe uzdužnu liniju, igra se nastavlja ubacivanjem nogom s mjesta gdje je izašla. Lopta mora mirovati na uzdužnoj liniji.',
+      'Ubacivanje se izvodi unutar 4 sekunde, a protivnici moraju biti najmanje 5 m udaljeni. Inače se ubacivanje dosuđuje protivniku.',
+      'Gol se ne može postići izravno iz ubacivanja: ako lopta izravno uđe u protivnički gol, slijedi izbacivanje, a ako uđe u vlastiti gol, udarac iz kuta za protivnika.'
+    ]],
+    ['Izbacivanje (vratar)', [
+      'Kad lopta, zadnja dotaknuta od napadača, prijeđe gol-liniju (a nije postignut gol), branjeni vratar loptu baca rukom iz bilo kojeg mjesta u svom kaznenom prostoru.',
+      'Izbacivanje se izvodi unutar 4 sekunde. Protivnici moraju biti izvan kaznenog prostora dok lopta ne bude u igri.',
+      'Gol se ne može postići izravno iz izbacivanja.'
+    ]],
+    ['Udarac iz kuta', [
+      'Kad lopta, zadnja dotaknuta od branitelja, prijeđe gol-liniju (a nije postignut gol), napadači izvode udarac iz kuta s najbližeg kutnog luka.',
+      'Udarac se izvodi unutar 4 sekunde, a protivnici moraju biti najmanje 5 m od kutnog luka.',
+      'Iz udarca iz kuta može se izravno postići gol, ali samo protivniku.'
+    ]],
+    ['Kazneni udarci za odluku pobjednika', [
+      'Izvode se nakon utakmice (i produžetaka, ako se igraju) na jedan gol. Ekipe izvode naizmjence, službeno po 5 udaraca.',
+      'Ako je i dalje neriješeno, izvodi se po jedan udarac dok jedna ekipa ne postigne gol više uz jednak broj izvođenja.',
+      'Svaki igrač ekipe mora izvesti udarac prije nego što bilo tko izvede drugi.',
+      'Na ovom turniru broj udaraca određen je pravilima turnira.'
+    ]]
+  ];
+
+  function vRules() {
+    const st = S.t.settings;
+    const rules = String(st.rules || '').split('\n').map(s => s.trim()).filter(Boolean);
+    return `<div class="sec-head"><div><h2>Pravila igre</h2><p class="lead">Službena FIFA pravila futsala, izdanje 2025./26. – sažeto i prevedeno. Na kraju su posebna pravila ovog turnira.</p></div></div>
+      <div class="laws">${LAWS.map(([t, items], i) => `<details class="law" ${i < 1 ? 'open' : ''}><summary><span class="law-n">${i + 1}</span>${esc(t)}</summary><ul>${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul></details>`).join('')}</div>
+      ${rules.length ? `<div class="card" style="margin-top:22px"><h2>Pravila ovog turnira</h2><p class="lead">Ako se razlikuju od službenih pravila, vrijede pravila turnira.</p><ul class="rules">${rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
+      <p class="lead" style="margin-top:16px">Izvor: FIFA, Futsal Laws of the Game 2025-26.</p>`;
+  }
+
+
+  /* ----- SPONZORI ----- */
+  const SP = { done: false };
+  function vSponsor() {
+    const st = S.t.settings;
+    if (SP.done) return `<div class="card" style="max-width:640px;margin:22px auto;text-align:center;padding:36px 22px">
+      <div style="font-size:3rem">🤝</div><h2>Hvala na interesu!</h2>
+      <p>Upit je poslan organizatoru. Javit ćemo vam se u najkraćem roku na e-mail ili telefon koji ste ostavili.</p>
+      <div class="btn-row" style="justify-content:center"><a class="btn primary" href="#pocetna">Natrag na početnu</a><button class="btn ghost" id="sp-again">Pošalji novi upit</button></div></div>`;
+    const email = String(st.sponsorEmail || '').trim();
+    return `<div style="max-width:760px;margin:0 auto">
+      <div class="sec-head"><div><h2>Postani sponzor</h2><p class="lead">${esc(st.name)}</p></div></div>
+      <div class="card" style="margin-bottom:16px"><div class="prose">${esc(st.sponsorText || '')}</div></div>
+      ${email ? `<form class="card" id="sp-form" novalidate>
+        <div class="row2">
+          <div class="field"><label for="sp-company">Tvrtka / obrt / udruga</label><input id="sp-company" name="company" type="text" maxlength="120" autocomplete="organization" placeholder="ostavite prazno ako ste fizička osoba"></div>
+          <div class="field"><label for="sp-name">Ime i prezime *</label><input id="sp-name" name="name" type="text" maxlength="80" required autocomplete="name"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="sp-mail">E-mail *</label><input id="sp-mail" name="email" type="email" maxlength="120" required autocomplete="email"></div>
+          <div class="field"><label for="sp-phone">Mobitel</label><input id="sp-phone" name="phone" type="tel" maxlength="30" autocomplete="tel"></div>
+        </div>
+        <div class="lbl" style="margin-bottom:8px">Razina sponzorstva *</div>
+        <div class="tiers" role="radiogroup" aria-label="Razina sponzorstva">
+          ${[['Bronze', 'tierBronze', '🥉'], ['Silver', 'tierSilver', '🥈'], ['Gold', 'tierGold', '🥇']].map(([n, k, ic]) => {
+            const perks = String(st[k + 'Perks'] || '').split('\n').map(x => x.trim()).filter(Boolean);
+            return `<label class="tier tier-${n.toLowerCase()}"><input type="radio" name="type" value="${n}" required>
+              <span class="tier-top"><span class="tier-ic">${ic}</span><b>${n}</b></span>
+              <span class="tier-price">${esc(T.fmtPrice(st[k + 'Price']))}</span>
+              <ul>${perks.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+              <span class="tier-pick"><span class="p-off">Odaberi</span><span class="p-on">✓ Odabrano</span></span></label>`; }).join('')}
+        </div>
+        <div class="field"><label for="sp-msg">Poruka *</label><textarea id="sp-msg" name="message" maxlength="2000" rows="5" required placeholder="Recite nam ukratko što vas zanima ili što još možete ponuditi (nagrade, opremu, okrjepu…)."></textarea></div>
+        <input class="hp" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="check" style="margin-bottom:18px"><input type="checkbox" name="consent" required> <span>Slažem se da organizator turnira koristi moje podatke samo kako bi mi odgovorio na ovaj upit.</span></label>
+        <div id="sp-err"></div>
+        <button class="btn primary lg" type="submit" id="sp-submit" style="width:100%">Pošalji upit</button>
+        <p class="lead" style="margin:12px 0 0;font-size:.85rem;text-align:center">Možete pisati i izravno na <a href="mailto:${esc(email)}">${esc(email)}</a></p>
+      </form>` : `<div class="empty"><b>Kontakt za sponzore uskoro</b>${st.contact ? esc(st.contact) : ''}</div>`}
+    </div>`;
+  }
+  function mountSponsor() {
+    const again = $('#sp-again'); if (again) again.onclick = () => { SP.done = false; render(); };
+    const form = $('#sp-form'); if (!form) return;
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const fd = new FormData(form), v = k => String(fd.get(k) || '').trim(), err = $('#sp-err');
+      if (v('_honey')) return;
+      const problems = [];
+      if (v('name').length < 2) problems.push('upišite ime i prezime');
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email'))) problems.push('upišite ispravan e-mail');
+      if (!v('type')) problems.push('odaberite razinu sponzorstva (Bronze, Silver ili Gold)');
+      if (v('message').length < 5) problems.push('napišite kratku poruku');
+      if (!fd.get('consent')) problems.push('potvrdite suglasnost');
+      if (problems.length) { err.innerHTML = `<div class="notice err">Molimo: ${esc(problems.join(', '))}.</div>`; return; }
+      const st = S.t.settings, to = String(st.sponsorEmail || '').trim();
+      const btn = $('#sp-submit'); btn.disabled = true; btn.textContent = 'Šaljem…';
+      try {
+        const r = await fetch('https://formsubmit.co/ajax/' + to, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            _subject: v('type').toUpperCase() + ' sponzorstvo – ' + (v('company') || v('name')) + ' (' + st.name + ')',
+            _template: 'table', _replyto: v('email'), _honey: '',
+            'Tvrtka': v('company') || '—', 'Ime i prezime': v('name'), 'E-mail': v('email'), 'Mobitel': v('phone') || '—',
+            'Razina sponzorstva': v('type'), 'Iznos paketa': T.fmtPrice(st['tier' + v('type') + 'Price']), 'Poruka': v('message')
+          })
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok || String(data.success) !== 'true') throw new Error(data.message || 'Slanje nije uspjelo');
+        SP.done = true; render(); window.scrollTo(0, 0);
+      } catch (ex) {
+        err.innerHTML = `<div class="notice err">Upit trenutno nije poslan. Pokušajte ponovno ili pišite izravno na <a href="mailto:${esc(to)}">${esc(to)}</a>.</div>`;
+        btn.disabled = false; btn.textContent = 'Pošalji upit';
+      }
+    });
+  }
 
   /* ----- PRIJAVA ----- */
   function vRegister() {
@@ -296,6 +510,7 @@
     const ch = T.champion();
     return `<div class="sec-head"><div><h2>Eliminacije</h2><p class="lead">${st.format === 'groups_ko' ? 'Parovi se popunjavaju automatski kad skupine završe.' : 'Pobjednici automatski prolaze u sljedeće kolo.'}</p></div></div>
       ${ch ? `<div class="podium"><span class="trophy">🏆</span><div><div class="pl">Pobjednik turnira</div><h3>${esc(T.teamName(ch.first))}</h3></div></div>` : ''}
+      <p class="swipe-hint">← Povuci lijevo-desno za cijeli kostur →</p>
       ${T.bracketHTML()}`;
   }
 
@@ -315,11 +530,16 @@
     const sg = e.target.closest('[data-stage]'); if (sg) { UI.stage = sg.dataset.stage; render(); }
   });
   document.addEventListener('change', e => { if (e.target.id === 'team-filter') { UI.team = e.target.value; render(); } });
-  window.addEventListener('hashchange', () => { UI.regDone = false; render(); window.scrollTo(0, 0); });
+  window.addEventListener('hashchange', () => { UI.regDone = false; SP.done = false; $('#more').hidden = true; render(); window.scrollTo(0, 0); });
+  document.addEventListener('click', e => {
+    const mb = e.target.closest('#more-btn'), more = $('#more');
+    if (mb) { more.hidden = !more.hidden; mb.setAttribute('aria-expanded', String(!more.hidden)); return; }
+    if (!more.hidden && (e.target === more || e.target.closest('#more a'))) more.hidden = true;
+  });
 
   function softRender() {
     const r = current();
-    if (r === 'prijava' && $('#reg-form')) { renderNav(); return; }
+    if ((r === 'prijava' && $('#reg-form')) || (r === 'sponzori' && $('#sp-form'))) { renderNav(); return; }
     const a = document.activeElement;
     if (a && $('#app').contains(a) && /INPUT|SELECT|TEXTAREA/.test(a.tagName)) return;
     const y = window.scrollY; render(); window.scrollTo(0, y);

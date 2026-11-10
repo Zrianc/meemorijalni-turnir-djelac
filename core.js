@@ -31,7 +31,7 @@
     fee: '',
     prizes: '',
     news: '',
-    about: 'Anđelko Herjavec – Đelac (1958. – 2001.) počeo je kao radnik u varaždinskom Varteksu, a postao direktor tvornice i predsjednik nogometnog kluba. Pod njegovim vodstvom Varteks je proživio svoje najveće europske utakmice, a navijači stadion i danas zovu njegovim imenom.\n\nOvaj turnir igramo u njegovu čast – uz navijačku podršku White Stonesa.',
+    about: 'Anđelko Herjavec, kojeg je cijeli Varaždin zvao Đelac (1958. – 2001.), bio je čovjek skromnog podrijetla. Karijeru je počeo kao običan radnik u tekstilnoj tvornici Varteks, a radom, upornošću i karizmom došao je do mjesta generalnog direktora tvornice. Priča o dečku iz pogona koji je postao prvi čovjek Varteksa u gradu se prepričava i danas.\n\nKao predsjednik NK Varteks od kluba je napravio jednu od najvećih hrvatskih nogometnih priča devedesetih. Varteks je tada uz Hajduk i Dinamo bio među najjačim klubovima u državi, poznat po vlastitoj školi nogometa i igračima koje je stvorio. Đelac je bio i član Izvršnog odbora Hrvatskog nogometnog saveza, a na stadionu Varteksa u njegovo je vrijeme igrala i hrvatska reprezentacija – 2001. protiv Grčke i San Marina.\n\nVrhunac je došao u sezoni 1998./99., kad je Varteks stigao do četvrtfinala Kupa pobjednika kupova. To je najveći europski uspjeh u povijesti kluba.\n\nĐelac je poginuo u prometnoj nesreći kod Posedarja u srpnju 2001. Navijači su odmah stadion prozvali njegovim imenom – Stadion Anđelko Herjavec – i to ime i danas živi na tribinama i u medijima.\n\nNjegov život ispričan je u dokumentarnom filmu „Đelac” (2020.) Alena Matušina i u knjizi „Đelac – hazarder u smokingu”.\n\nOvaj turnir igramo u njegovu čast – uz navijačku podršku White Stonesa.',
     rules: 'Igra se po službenim FIFA pravilima futsala (izdanje 2025./26.), uz prilagodbe turnira navedene u ovim pravilima.\nEkipa igra s vratarom i 4 igrača u polju. Utakmica ne može početi ni nastaviti se ako ekipa ima manje od 3 igrača.\nIzmjene su neograničene i leteće, bez prekida igre, ali samo u zoni za izmjene: igrač mora izaći s terena prije nego što zamjena uđe.\nNema zaleđa.\nKad lopta izađe preko uzdužne linije, igra se nastavlja ubacivanjem nogom (lopta mirna na liniji). Gol se ne može postići izravno iz ubacivanja.\nPravilo 4 sekunde: ubacivanje, kut, slobodni udarac i izbacivanje vratara moraju se izvesti unutar 4 sekunde, inače lopta pripada protivniku. Protivnici moraju biti udaljeni najmanje 5 metara.\nVratar loptu smije uhvatiti rukama samo u svom kaznenom prostoru, a iz igre je izbacuje rukom. Na svojoj polovici smije kontrolirati loptu najviše 4 sekunde.\nKad suigrač namjerno vrati loptu vrataru, vratar je na svojoj polovici ne smije ponovno dodirnuti dok je ne dotakne protivnik.\nKazneni udarac izvodi se sa 6 metara.\nAkumulirani prekršaji: zbrajaju se svi prekršaji kažnjeni izravnim slobodnim udarcem, posebno za svako poluvrijeme. Od 6. prekršaja nadalje protivnik izvodi izravni slobodni udarac bez živog zida s oznake na 10 metara. Ako je prekršaj napravljen bliže golu, ekipa bira između 10 metara i mjesta prekršaja.\nSvaka ekipa ima pravo na jedan time-out od 1 minute po poluvremenu, samo dok je u posjedu lopte.\nDva žuta kartona znače crveni. Nakon crvenog kartona ekipa igra s igračem manje 2 minute ili dok ne primi gol, a zatim može uvesti zamjenu.\nPravilo turnira: isključeni igrač ne smije igrati sljedeću utakmicu turnira. Klizeći startovi prema protivniku nisu dopušteni.\nIgra se u tenisicama za dvoranu ili travu; kopačke s čepovima nisu dopuštene. Štitnici za potkoljenicu su obavezni.\nPobjeda nosi 3 boda, neriješeno 1, poraz 0. Kod jednakog broja bodova u skupini odlučuju: međusobni susret, gol-razlika, više postignutih golova.\nU eliminacijama se kod neriješenog rezultata izvode kazneni udarci sa 6 metara, po 3 za svaku ekipu, a zatim naizmjence do odluke.\nEkipa koja ne dođe na utakmicu u roku od 5 minuta od zakazanog termina gubi 3 : 0 bez borbe.\nOdluke sudaca su konačne. Organizator zadržava pravo izmjene rasporeda.',
     format: 'groups_ko',      // groups_ko | ko | league
     groupsCount: 4,
@@ -47,9 +47,18 @@
     minPlayers: 5,
     maxPlayers: 10,
     registrationOpen: true,
-    scarfText: 'WHITE STONES ✦ MEMORIJAL ĐELAC ✦ VARAŽDIN'
+    scarfText: 'WHITE STONES ✦ MEMORIJAL ĐELAC ✦ VARAŽDIN',
+    sponsorEmail: 'memorijal.djelac@gmail.com',
+    tierBronzePrice: '',
+    tierBronzePerks: 'Logo i ime na web stranici turnira\nZahvala na društvenim mrežama',
+    tierSilverPrice: '',
+    tierSilverPerks: 'Sve iz paketa Bronze\nReklama ili transparent u dvorani\nSpominjanje na razglasu tijekom turnira',
+    tierGoldPrice: '',
+    tierGoldPerks: 'Sve iz paketa Silver\nIstaknuti logo na naslovnici stranice\nIme sponzora uz finale i dodjelu nagrada\nUručenje pehara pobjedniku',
+    sponsorText: 'Memorijal „Đelac” živi od podrške ljudi i tvrtki kojima je stalo do varaždinskog nogometa i uspomene na Anđelka Herjavca. Postanite sponzor ili donator turnira i budite dio ove priče.\n\nSponzore ističemo na web stranici turnira i u dvorani, a s veseljem ćemo dogovoriti i druge oblike suradnje – novčanu podršku, nagrade, opremu, piće ili hranu za ekipe.'
   };
   const FUTSAL_RULES = DEFAULT_SETTINGS.rules;
+  const DJELAC_TEXT = DEFAULT_SETTINGS.about;
   const NUM_KEYS = ['groupsCount', 'advance', 'matchMinutes', 'breakMinutes', 'koBreak', 'fields', 'maxTeams', 'minPlayers', 'maxPlayers'];
   const BOOL_KEYS = ['doubleRound', 'thirdPlace', 'registrationOpen'];
 
@@ -466,6 +475,12 @@
     if (st.format === 'ko') return 'Kup sustav – ispadanje od prve utakmice';
     return `${st.groupsCount} ${+st.groupsCount === 1 ? 'skupina' : (+st.groupsCount < 5 ? 'skupine' : 'skupina')} + eliminacije · dalje idu ${st.advance} najbolje iz svake skupine`;
   }
+  function fmtPrice(v) {
+    const x = String(v ?? '').trim();
+    if (!x) return 'iznos po dogovoru';
+    if (/^\d+([.,]\d+)?$/.test(x)) return Number(x.replace(',', '.')).toLocaleString('hr-HR') + ' €';
+    return x;
+  }
   function fmtDate(d, opts) {
     if (!d) return '';
     const x = new Date(d + 'T12:00:00'); if (isNaN(x)) return d;
@@ -612,10 +627,10 @@
 
   window.T = {
     $, $$, esc, uid, isNum, clone, shuffle, rnd, toMin, fmtMin, hue, initials, nameKey,
-    DEFAULT_SETTINGS, FUTSAL_RULES, NUM_KEYS, BOOL_KEYS, normT, LIVE, API, Demo, S,
+    DEFAULT_SETTINGS, FUTSAL_RULES, DJELAC_TEXT, NUM_KEYS, BOOL_KEYS, normT, LIVE, API, Demo, S,
     teamById, teamName, approvedTeams, groupByKey, groupLabel, findMatch,
     validateDraw, doDraw, scheduleAll, standings, groupComplete, groupMatches, resolve, winnerOf, loserOf, srcLabel,
-    champion, topScorers, formatText, fmtDate,
+    champion, topScorers, formatText, fmtDate, fmtPrice,
     crest, sideHTML, stageLabel, matchCard, scorersLine, standingsTable, bracketHTML,
     toast, openModal, closeModal, confirmBox, errText, refresh, start, saveT
   };

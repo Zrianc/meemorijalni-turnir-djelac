@@ -471,3 +471,106 @@ body.app .notice.warn{background:#fff1e6;color:#7a3a0c;border-left-color:var(--o
 body.app .mode-pill{background:#1f1f1f;border-color:#333}
 body.site .scarf-foot{padding:30px 0 0}
 body.site .scarf-foot img{width:100%;max-width:none;margin:0 0 -4px}
+
+/* =====================================================================
+   MOBITEL – donji izbornik i sitne prilagodbe
+   ===================================================================== */
+.bottom-nav,.more-sheet{display:none}
+.swipe-hint{display:none}
+.brand>span{min-width:0;overflow:hidden}
+@media(max-width:760px){
+  .tabs{display:none}
+  body.site,body.has-bnav{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;background:#0a0a0a;
+    padding:0 4px env(safe-area-inset-bottom);border-top:1px solid #222;box-shadow:0 -4px 20px rgba(0,0,0,.35)}
+  .bottom-nav::before{content:"";position:absolute;left:0;right:0;top:-7px;height:6px;background:linear-gradient(180deg,#f2661c 0 3px,#2438b8 3px 6px)}
+  body:not(.has-bnav):not(.site) .bottom-nav{display:none}
+  .bottom-nav a,.bottom-nav button{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    height:64px;color:#8d8d8d;text-decoration:none;background:none;border:0;font:inherit;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .bottom-nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .bottom-nav .on{color:#fff}
+  .bottom-nav .on::after{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;background:#f2661c}
+  .bottom-nav em{position:absolute;top:7px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#f2661c;color:#fff;font-style:normal;font-size:.68rem;line-height:18px;text-align:center}
+  .bottom-nav em.lv{background:#e0243f}
+  .more-sheet:not([hidden]){display:block;position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.55)}
+  .more-sheet .sheet{position:absolute;left:10px;right:10px;bottom:calc(80px + env(safe-area-inset-bottom));background:#141414;border:1px solid #2a2a2a;border-top:4px solid #f2661c;padding:6px;display:flex;flex-direction:column}
+  .more-sheet a{color:#fff;text-decoration:none;font-family:'Anton','Barlow Condensed',sans-serif;font-size:1.3rem;letter-spacing:.03em;text-transform:uppercase;padding:14px 14px;border-bottom:1px solid #222}
+  .more-sheet a:last-child{border-bottom:0;font-family:inherit;font-size:.95rem;text-transform:none;color:#9a9a9a}
+  .more-sheet a.on{color:#f2661c}
+  #toast{bottom:calc(88px + env(safe-area-inset-bottom))}
+  .swipe-hint{display:block;font-size:.85rem;color:var(--muted);text-align:center;margin:0 0 8px}
+  /* zaglavlje */
+  .top .wrap{padding-top:10px;padding-bottom:10px}
+  .brand small{max-width:52vw}
+  body.app .brand small{display:none}
+  body.app .top .btn.outline{padding:7px 10px}
+  /* naslovnica */
+  body.site .hero{padding:34px 18px 30px}
+  body.site .hero h1{font-size:clamp(1.9rem,8.8vw,3rem);overflow-wrap:normal;word-break:normal;hyphens:manual}
+  body.site .chip{font-size:.85rem}
+  body.site .countdown div{min-width:62px}
+  body.site .footer, body.site footer.foot{padding-bottom:24px}
+  /* kartice i tablice */
+  .standings th,.standings td{padding:8px 4px}
+  .standings .team{min-width:0}
+  .standings .team .tn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:38vw}
+  .m-team .tn{font-size:.92rem}
+  .filters select{width:100%}
+  .sec-head .btn-row{width:100%}
+  /* aplikacija: veći gumbi za upis rezultata */
+  .score-line{grid-template-columns:1fr 50px 10px 50px 1fr}
+  .score-line input{font-size:1.4rem;padding:8px 2px}
+  .adm-match .actions .btn{padding:10px 12px}
+  .modal{max-height:88vh}
+}
+@media(max-width:380px){
+  .bottom-nav a,.bottom-nav button{font-size:.62rem}
+}
+@media(max-width:760px){
+  body.site .bottom-nav a,body.site .bottom-nav button{color:#8d8d8d}
+  body.site .bottom-nav .on{color:#fff}
+  body.site .more-sheet a{color:#fff}
+  body.site .more-sheet a.on{color:#f2661c}
+  body.site .more-sheet a:last-child{color:#9a9a9a}
+}
+body.site .card .prose{line-height:1.65}
+/* stranica s pravilima */
+body.site .laws{display:flex;flex-direction:column;gap:8px}
+body.site .law{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--blue)}
+body.site .law[open]{border-left-color:var(--orange)}
+body.site .law summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px;padding:14px 16px;font-family:var(--banner);font-size:1.3rem;text-transform:uppercase;letter-spacing:.02em;color:#fff}
+body.site .law summary::-webkit-details-marker{display:none}
+body.site .law summary::after{content:"+";margin-left:auto;font-family:var(--body);font-size:1.5rem;color:var(--muted)}
+body.site .law[open] summary::after{content:"–"}
+body.site .law-n{width:32px;height:32px;flex:none;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#0a0a0a;font-size:1rem}
+body.site .law ul{margin:0;padding:0 18px 16px 62px;display:flex;flex-direction:column;gap:9px;color:#d8d8d8;line-height:1.55}
+@media(max-width:520px){body.site .law ul{padding-left:36px}body.site .law summary{font-size:1.1rem}}
+body.site .sponsor-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-left:6px solid var(--orange)}
+body.site .sponsor-cta h3{margin-bottom:4px}
+body.site .sponsor-cta p{margin:0;color:var(--muted)}
+@media(max-width:520px){body.site .sponsor-cta .btn{width:100%}}
+/* razine sponzorstva */
+body.site .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+body.site .tier{--c:#cd7f32;position:relative;display:flex;flex-direction:column;gap:8px;padding:16px 14px 14px;background:#101010;border:2px solid #2a2a2a;border-top:6px solid var(--c);cursor:pointer;transition:border-color .15s,transform .1s}
+body.site .tier-silver{--c:#c9ccd1}
+body.site .tier-gold{--c:#e2b33c}
+body.site .tier input{position:absolute;opacity:0;pointer-events:none}
+body.site .tier:hover{border-color:#444;border-top-color:var(--c)}
+body.site .tier:has(input:checked){border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,#101010);transform:translateY(-2px)}
+body.site .tier:has(input:focus-visible){outline:2px solid var(--c);outline-offset:2px}
+body.site .tier-top{display:flex;align-items:center;gap:8px}
+body.site .tier-top b{font-family:var(--banner);font-weight:400;font-size:1.7rem;letter-spacing:.04em;text-transform:uppercase;color:var(--c)}
+body.site .tier-ic{font-size:1.5rem}
+body.site .tier-price{font-weight:700;color:#fff;font-size:.95rem}
+body.site .tier ul{margin:0;padding-left:18px;color:#cfcfcf;font-size:.88rem;display:flex;flex-direction:column;gap:4px;flex:1}
+body.site .tier-pick{margin-top:4px;text-align:center;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;padding:8px;border:1px solid #333;color:#9a9a9a}
+body.site .tier:has(input:checked) .tier-pick{background:var(--c);border-color:var(--c);color:#0a0a0a}
+body.site .tier .p-on{display:none}body.site .tier:has(input:checked) .p-on{display:inline}body.site .tier:has(input:checked) .p-off{display:none}
+@media(max-width:640px){body.site .tiers{grid-template-columns:1fr}}
+body.app .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0 12px}
+body.app .eur{position:relative}
+body.app .eur input{padding-right:34px;font-weight:700}
+body.app .eur span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700}
+@media(max-width:520px){body.app .price-grid{grid-template-columns:1fr}}
+body.app .eur input::-webkit-outer-spin-button,body.app .eur input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+body.app .eur input{-moz-appearance:textfield;appearance:textfield}
